@@ -40,3 +40,9 @@ next-dev-*.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+
+# Duplicados accidentales de WebStorm
+*-Alejandro-O.*
