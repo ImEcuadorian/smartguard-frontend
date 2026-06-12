@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Duplicados accidentales de WebStorm
 *-Alejandro-O.*
+
+# WebStorm / IntelliJ
+.idea/
