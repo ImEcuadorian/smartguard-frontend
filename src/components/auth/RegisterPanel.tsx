@@ -41,7 +41,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="rounded-lg border border-sky-300/25 bg-sky-400/10 p-3 text-sm leading-6 text-sky-100">
+      <div className="rounded-lg border border-sky-300/25 bg-sky-400/10 p-3 text-sm leading-6 text-sky-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]">
         <div className="flex items-center gap-2 font-semibold">
           <Info className="h-4 w-4" />
           Registro cliente preparado
@@ -58,6 +58,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
           autoComplete="name"
           value={form.displayName}
           onChange={(event) => updateField("displayName", event.target.value)}
+          className="h-11 bg-slate-950/70 px-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
           required
         />
       </div>
@@ -68,6 +69,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
           autoComplete="username"
           value={form.username}
           onChange={(event) => updateField("username", event.target.value)}
+          className="h-11 bg-slate-950/70 px-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
           required
         />
       </div>
@@ -80,6 +82,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
             autoComplete="new-password"
             value={form.password}
             onChange={(event) => updateField("password", event.target.value)}
+            className="h-11 bg-slate-950/70 px-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
             required
           />
         </div>
@@ -91,6 +94,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
             autoComplete="new-password"
             value={form.confirmPassword}
             onChange={(event) => updateField("confirmPassword", event.target.value)}
+            className="h-11 bg-slate-950/70 px-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
             required
           />
         </div>
@@ -110,7 +114,11 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
         </div>
       ) : null}
 
-      <Button className="w-full" type="submit" isLoading={isSubmitting}>
+      <Button
+        className="h-11 w-full shadow-[0_0_34px_rgb(var(--sg-primary-rgb)/0.22)]"
+        type="submit"
+        isLoading={isSubmitting}
+      >
         <UserPlus className="h-4 w-4" />
         Solicitar cuenta cliente
       </Button>

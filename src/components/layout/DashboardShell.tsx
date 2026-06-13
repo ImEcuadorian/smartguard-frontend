@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useRequireAuth } from "@/lib/auth/require-auth";
-import { GradientBackground } from "@/components/ui/GradientBackground";
+import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -16,7 +16,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   if (isChecking) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
-        <GradientBackground />
+        <AnimatedBackground />
         <LoadingState label="Verificando sesion" />
       </div>
     );
@@ -25,7 +25,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   if (!isAuthorized) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
-        <GradientBackground />
+        <AnimatedBackground />
         <LoadingState label="Redirigiendo al login" />
       </div>
     );
@@ -33,7 +33,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-transparent text-slate-100">
-      <GradientBackground />
+      <AnimatedBackground />
       <div className="flex min-h-screen">
         <Sidebar />
 

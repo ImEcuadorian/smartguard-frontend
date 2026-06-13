@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { getRoleLabel } from "@/lib/auth/roles";
 import { cn } from "@/lib/utils/cn";
@@ -76,7 +76,7 @@ export function UserMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-80 origin-top-right animate-sg-fade-up overflow-hidden rounded-lg border border-white/10 bg-slate-950/90 shadow-2xl shadow-black/40 backdrop-blur-2xl"
+          className="absolute right-0 top-full z-50 mt-2 w-[min(calc(100vw-2rem),20rem)] origin-top-right animate-sg-fade-up overflow-hidden rounded-lg border border-white/10 bg-slate-950/90 shadow-2xl shadow-black/40 backdrop-blur-2xl"
         >
           <div className="border-b border-white/10 p-4">
             <div className="flex items-center gap-3">
@@ -106,14 +106,17 @@ export function UserMenu() {
                 <Palette className="h-3.5 w-3.5 text-[var(--sg-primary)]" />
                 Cambiar tema
               </div>
-              <ThemeSwitcher compact className="[&>div:first-child]:hidden [&>div:last-child]:w-full" />
+              <ThemeSwitcher compact className="w-full" />
             </div>
           </div>
 
           <div className="border-t border-white/10 p-2">
             <button
               type="button"
-              onClick={() => void logout()}
+              onClick={() => {
+                setOpen(false);
+                void logout();
+              }}
               className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-red-100 transition hover:bg-red-500/10"
               role="menuitem"
             >
@@ -136,7 +139,7 @@ function MenuLink({
   href: string;
   icon: LucideIcon;
   onClick?: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <Link
