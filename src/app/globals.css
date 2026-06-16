@@ -138,12 +138,52 @@ textarea {
   outline-color: var(--sg-primary);
 }
 
+.sg-theme-scrollbar {
+  scrollbar-color: rgb(var(--sg-primary-rgb) / 0.58) transparent;
+  scrollbar-width: thin;
+}
+
+.sg-theme-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sg-theme-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sg-theme-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgb(var(--sg-primary-rgb) / 0.72),
+    rgb(var(--sg-accent-rgb) / 0.44)
+  );
+}
+
+.sg-theme-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--sg-primary-rgb) / 0.92),
+    rgb(var(--sg-accent-rgb) / 0.62)
+  );
+}
+
 .sg-mesh-layer {
   background:
     radial-gradient(ellipse at 12% 18%, rgb(var(--sg-primary-rgb) / 0.22), transparent 34%),
     radial-gradient(ellipse at 78% 14%, rgb(var(--sg-accent-rgb) / 0.18), transparent 32%),
     radial-gradient(ellipse at 58% 86%, rgb(var(--sg-primary-rgb) / 0.16), transparent 36%),
     linear-gradient(130deg, transparent 0 28%, rgb(var(--sg-accent-rgb) / 0.08) 46%, transparent 68%);
+  background-position:
+    0% 0%,
+    100% 0%,
+    52% 100%,
+    0% 50%;
+  background-size:
+    120% 120%,
+    118% 118%,
+    125% 125%,
+    190% 190%;
   filter: blur(18px) saturate(1.18);
   opacity: 0.9;
   transform: translate3d(0, 0, 0);
@@ -158,6 +198,17 @@ textarea {
   animation: sg-aurora-flow 18s ease-in-out infinite alternate;
 }
 
+.sg-orbit-glow-layer {
+  background:
+    radial-gradient(circle at 20% 70%, rgb(var(--sg-primary-rgb) / 0.2), transparent 19rem),
+    radial-gradient(circle at 84% 24%, rgb(var(--sg-accent-rgb) / 0.18), transparent 22rem),
+    radial-gradient(circle at 58% 45%, rgb(var(--sg-primary-rgb) / 0.12), transparent 26rem);
+  filter: blur(22px);
+  opacity: 0.86;
+  transform: translate3d(0, 0, 0);
+  animation: sg-glow-float 14s ease-in-out infinite alternate;
+}
+
 .sg-wave-layer {
   background:
     linear-gradient(115deg, transparent 0 36%, rgb(var(--sg-primary-rgb) / 0.12) 45%, transparent 58%),
@@ -168,6 +219,35 @@ textarea {
   opacity: 0.72;
   mask-image: linear-gradient(to bottom, transparent, black 16%, black 82%, transparent);
   animation: sg-wave-drift 24s linear infinite;
+}
+
+.sg-wave-svg-layer {
+  fill: none;
+  filter: drop-shadow(0 0 18px rgb(var(--sg-primary-rgb) / 0.16));
+  opacity: 0.52;
+  transform: translate3d(0, 0, 0);
+  animation: sg-liquid-waves 20s ease-in-out infinite alternate;
+}
+
+.sg-wave-path-primary,
+.sg-wave-path-accent {
+  stroke-linecap: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.sg-wave-path-primary {
+  stroke-dasharray: 780 210;
+  stroke-dashoffset: 0;
+  stroke: rgb(var(--sg-primary-rgb) / 0.3);
+  animation: sg-wave-dash 18s linear infinite;
+}
+
+.sg-wave-path-accent {
+  stroke-dasharray: 620 240;
+  stroke-dashoffset: 0;
+  stroke: rgb(var(--sg-accent-rgb) / 0.22);
+  animation: sg-wave-dash 24s linear infinite reverse;
 }
 
 .sg-light-ribbon-layer {
@@ -181,6 +261,15 @@ textarea {
   opacity: 0.58;
   transform: translate3d(0, 0, 0);
   animation: sg-ribbon-sweep 22s ease-in-out infinite alternate;
+}
+
+.sg-cursor-glow-layer {
+  background:
+    radial-gradient(circle at var(--sg-cursor-x) var(--sg-cursor-y), rgb(var(--sg-primary-rgb) / 0.2), transparent 18rem),
+    radial-gradient(circle at var(--sg-cursor-x) var(--sg-cursor-y), rgb(var(--sg-accent-rgb) / 0.1), transparent 28rem);
+  mix-blend-mode: screen;
+  opacity: 0.68;
+  transition: opacity 240ms ease;
 }
 
 .sg-grid-layer {
@@ -220,14 +309,29 @@ textarea {
 
 @keyframes sg-mesh-shift {
   0% {
+    background-position:
+      0% 0%,
+      100% 0%,
+      52% 100%,
+      0% 50%;
     transform: translate3d(-1.5%, -1%, 0) scale(1);
   }
 
   50% {
+    background-position:
+      30% 18%,
+      72% 24%,
+      48% 78%,
+      55% 50%;
     transform: translate3d(1%, 1.5%, 0) scale(1.03);
   }
 
   100% {
+    background-position:
+      58% 12%,
+      40% 18%,
+      66% 88%,
+      100% 50%;
     transform: translate3d(2%, -1%, 0) scale(1.02);
   }
 }
@@ -246,6 +350,20 @@ textarea {
   }
 }
 
+@keyframes sg-glow-float {
+  0% {
+    transform: translate3d(-2%, 2%, 0) rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2%, -1%, 0) rotate(2deg) scale(1.04);
+  }
+
+  100% {
+    transform: translate3d(3%, 2%, 0) rotate(-2deg) scale(1.02);
+  }
+}
+
 @keyframes sg-wave-drift {
   from {
     background-position:
@@ -257,6 +375,26 @@ textarea {
     background-position:
       100% 50%,
       0% 50%;
+  }
+}
+
+@keyframes sg-wave-dash {
+  to {
+    stroke-dashoffset: -990;
+  }
+}
+
+@keyframes sg-liquid-waves {
+  0% {
+    transform: translate3d(-2%, 0, 0) scaleX(1);
+  }
+
+  50% {
+    transform: translate3d(1%, 1.5%, 0) scaleX(1.015);
+  }
+
+  100% {
+    transform: translate3d(2%, -1%, 0) scaleX(1.02);
   }
 }
 
@@ -323,10 +461,15 @@ textarea {
   }
 
   .sg-aurora-layer,
+  .sg-cursor-glow-layer,
   .sg-light-ribbon-layer,
   .sg-mesh-layer,
+  .sg-orbit-glow-layer,
   .sg-scan-layer,
   .sg-wave-layer,
+  .sg-wave-path-accent,
+  .sg-wave-path-primary,
+  .sg-wave-svg-layer,
   .animate-sg-fade-up,
   .animate-sg-glow {
     animation: none !important;

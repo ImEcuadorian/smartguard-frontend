@@ -46,6 +46,14 @@ export function PremiumThemeSelect({
     };
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+
+    rootRef.current
+      ?.querySelector("[role='option'][aria-selected='true']")
+      ?.scrollIntoView({ block: "nearest" });
+  }, [open, theme]);
+
   function chooseTheme(nextTheme: ThemeId) {
     setTheme(nextTheme);
     setOpen(false);
@@ -102,7 +110,7 @@ export function PremiumThemeSelect({
           role="listbox"
           aria-label="Tema visual"
           className={cn(
-            "absolute left-0 z-50 max-h-80 w-full min-w-64 animate-sg-fade-up overflow-hidden rounded-lg border border-white/10 bg-slate-950/92 p-1.5 shadow-2xl shadow-black/45 backdrop-blur-2xl",
+            "sg-theme-scrollbar absolute left-0 z-[70] max-h-[280px] w-full min-w-[17rem] animate-sg-fade-up overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-slate-950/92 p-1.5 pr-2 shadow-2xl shadow-black/45 backdrop-blur-2xl",
             placement === "up"
               ? "bottom-full mb-2 origin-bottom"
               : "top-full mt-2 origin-top",

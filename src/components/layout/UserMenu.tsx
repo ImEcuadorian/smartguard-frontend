@@ -3,7 +3,6 @@
 import {
   ChevronDown,
   LogOut,
-  Palette,
   Settings,
   UserCircle,
 } from "lucide-react";
@@ -13,7 +12,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { getRoleLabel } from "@/lib/auth/roles";
 import { cn } from "@/lib/utils/cn";
-import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
 import { Badge } from "@/components/ui/Badge";
 
 export function UserMenu() {
@@ -101,13 +99,6 @@ export function UserMenu() {
             <MenuLink href="/settings" icon={Settings} onClick={() => setOpen(false)}>
               Configuracion
             </MenuLink>
-            <div className="mt-2 rounded-lg border border-white/10 bg-white/5 p-3">
-              <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-                <Palette className="h-3.5 w-3.5 text-[var(--sg-primary)]" />
-                Cambiar tema
-              </div>
-              <ThemeSwitcher compact className="w-full" />
-            </div>
           </div>
 
           <div className="border-t border-white/10 p-2">

@@ -3,6 +3,8 @@
 import {
   Activity,
   Cpu,
+  Eye,
+  EyeOff,
   LockKeyhole,
   RadioReceiver,
   ShieldCheck,
@@ -34,6 +36,7 @@ export function LoginPage() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const session = getAuthSession();
@@ -150,15 +153,31 @@ export function LoginPage() {
 
                   <div>
                     <Label htmlFor="password">Contrasena</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      className="h-11 bg-slate-950/70 px-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        className="h-11 bg-slate-950/70 px-4 pr-12 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
+                        required
+                      />
+                      <button
+                        type="button"
+                        aria-label={
+                          showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+                        }
+                        onClick={() => setShowPassword((current) => !current)}
+                        className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-slate-400 transition duration-200 hover:bg-white/10 hover:text-[var(--sg-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--sg-primary)]"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                   {loginError ? (
