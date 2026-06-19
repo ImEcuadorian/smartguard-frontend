@@ -11,6 +11,7 @@ import type {
   SensorType,
   UUID,
 } from "@/lib/api/types";
+import {ApiError} from "@/lib/api/http";
 
 export function useSensors(params?: {
   deviceId?: UUID;
@@ -58,7 +59,17 @@ export function useUpdateSensorStatus() {
 export function useLatestSensorReading(id: UUID | undefined) {
   return useQuery({
     queryKey: ["sensors", id, "readings", "latest"],
-    queryFn: () => sensorApi.latestReading(id as UUID),
+    queryFn: async () => {
+      try {
+        return await sensorApi.latestReading(id as UUID);
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          return null;
+        }
+
+        throw error;
+      }
+    },
     enabled: Boolean(id),
     retry: false,
   });
