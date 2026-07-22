@@ -6,21 +6,27 @@ import type {
   AlertSeverity,
   AlertType,
   ComparisonOperator,
+  SensorReadingResponse,
   SensorAlertRuleType,
   SensorStatus,
   SensorType,
   UUID,
 } from "@/lib/api/types";
-import {ApiError} from "@/lib/api/http";
+import { ApiError } from "@/lib/api/http";
+
+type QueryRefreshOptions = {
+  refetchInterval?: number | false;
+};
 
 export function useSensors(params?: {
   deviceId?: UUID;
   status?: SensorStatus;
   type?: SensorType;
-}) {
+}, options?: QueryRefreshOptions) {
   return useQuery({
     queryKey: ["sensors", params],
     queryFn: () => sensorApi.list(params),
+    refetchInterval: options?.refetchInterval,
   });
 }
 
@@ -56,7 +62,10 @@ export function useUpdateSensorStatus() {
   });
 }
 
-export function useLatestSensorReading(id: UUID | undefined) {
+export function useLatestSensorReading(
+  id: UUID | undefined,
+  options?: QueryRefreshOptions,
+) {
   return useQuery({
     queryKey: ["sensors", id, "readings", "latest"],
     queryFn: async () => {
@@ -72,17 +81,20 @@ export function useLatestSensorReading(id: UUID | undefined) {
     },
     enabled: Boolean(id),
     retry: false,
+    refetchInterval: options?.refetchInterval,
   });
 }
 
 export function useSensorReadings(
   id: UUID | undefined,
   params: { from?: string; to?: string; limit?: number } = { limit: 24 },
+  options?: QueryRefreshOptions,
 ) {
-  return useQuery({
+  return useQuery<SensorReadingResponse[]>({
     queryKey: ["sensors", id, "readings", params],
     queryFn: () => sensorApi.readings(id as UUID, params),
     enabled: Boolean(id),
+    refetchInterval: options?.refetchInterval,
   });
 }
 

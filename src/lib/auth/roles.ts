@@ -25,6 +25,14 @@ export function canOperate(role: UserRole | undefined) {
   return hasRole(role, "OPERATOR");
 }
 
+export function isAdmin(role: UserRole | undefined) {
+  return role === "ADMIN";
+}
+
+export function isOperator(role: UserRole | undefined) {
+  return role === "OPERATOR";
+}
+
 export function isViewer(role: UserRole | undefined) {
   return role === "VIEWER";
 }

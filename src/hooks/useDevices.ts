@@ -4,10 +4,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deviceApi } from "@/lib/api/smartguard-api";
 import type { DeviceStatus, UUID } from "@/lib/api/types";
 
-export function useDevices(params?: { status?: DeviceStatus }) {
+type QueryRefreshOptions = {
+  refetchInterval?: number | false;
+};
+
+export function useDevices(
+  params?: { status?: DeviceStatus },
+  options?: QueryRefreshOptions,
+) {
   return useQuery({
     queryKey: ["devices", params],
     queryFn: () => deviceApi.list(params),
+    refetchInterval: options?.refetchInterval,
   });
 }
 

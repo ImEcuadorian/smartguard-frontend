@@ -4,11 +4,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi, userApi } from "@/lib/api/smartguard-api";
 import type { UserRole, UserStatus, UUID } from "@/lib/api/types";
 
-export function useCurrentUser(enabled = true) {
+type QueryRefreshOptions = {
+  refetchInterval?: number | false;
+};
+
+export function useCurrentUser(enabled = true, options?: QueryRefreshOptions) {
   return useQuery({
     queryKey: ["auth", "me"],
     queryFn: authApi.me,
     enabled,
+    refetchInterval: options?.refetchInterval,
   });
 }
 
@@ -23,11 +28,12 @@ export function useChangePassword() {
   });
 }
 
-export function useUsers(enabled = true) {
+export function useUsers(enabled = true, options?: QueryRefreshOptions) {
   return useQuery({
     queryKey: ["users"],
     queryFn: userApi.list,
     enabled,
+    refetchInterval: options?.refetchInterval,
   });
 }
 

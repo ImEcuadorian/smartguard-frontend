@@ -4,10 +4,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { actuatorApi } from "@/lib/api/smartguard-api";
 import type { ActuatorCommandType, UUID } from "@/lib/api/types";
 
-export function useActuators() {
+type QueryRefreshOptions = {
+  refetchInterval?: number | false;
+};
+
+export function useActuators(options?: QueryRefreshOptions) {
   return useQuery({
     queryKey: ["actuators"],
     queryFn: actuatorApi.list,
+    refetchInterval: options?.refetchInterval,
   });
 }
 

@@ -19,6 +19,8 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { Modal } from "@/components/ui/Modal";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Select } from "@/components/ui/Select";
+import { ActivityPanel } from "@/components/dashboard/ActivityPanel";
+import { SensorSummaryPanel } from "@/components/dashboard/SensorSummaryPanel";
 import { SensorForm, type SensorFormValues } from "./SensorForm";
 import { SensorTable } from "./SensorTable";
 
@@ -114,6 +116,17 @@ export function SensorsPage() {
               </Select>
             </CardContent>
           </Card>
+          <ActivityPanel
+            title="Vista operativa de sensores"
+            description="Lectura visual por tipo: puerta, movimiento, gas, emergencia y sensores numericos."
+            className="mb-4"
+          >
+            <SensorSummaryPanel
+              sensors={sensors.data ?? []}
+              limit={12}
+              refetchInterval={30_000}
+            />
+          </ActivityPanel>
           <SensorTable
             sensors={sensors.data ?? []}
             canEdit={canEditStatus}

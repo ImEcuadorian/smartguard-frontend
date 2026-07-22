@@ -23,6 +23,14 @@ export function canAccessClientArea(role: UserRole | undefined) {
   return hasAnyRole(role, AUTHENTICATED_ROLES);
 }
 
+export function canSeeUserAdministration(role: UserRole | undefined) {
+  return canAccessAdmin(role);
+}
+
+export function canSendActuatorCommands(role: UserRole | undefined) {
+  return canAccessOperations(role) || role === "VIEWER";
+}
+
 export function routeIsAllowed(
   role: UserRole | undefined,
   allowedRoles: readonly UserRole[],
