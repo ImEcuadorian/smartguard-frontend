@@ -98,15 +98,14 @@ export function UserMenu() {
             <MenuLink href="/profile" icon={UserCircle} onClick={() => setOpen(false)}>
               {isViewer ? "Mi perfil" : "Ver perfil"}
             </MenuLink>
-            {isViewer ? (
-              <MenuLink href="/about" icon={Info} onClick={() => setOpen(false)}>
-                Acerca de nosotros
-              </MenuLink>
-            ) : (
+            <MenuLink href="/about" icon={Info} onClick={() => setOpen(false)}>
+              Acerca de nosotros
+            </MenuLink>
+            {!isViewer ? (
               <MenuLink href="/settings" icon={Settings} onClick={() => setOpen(false)}>
                 Configuracion
               </MenuLink>
-            )}
+            ) : null}
           </div>
 
           <div className="border-t border-white/10 p-2">

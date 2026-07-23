@@ -11,8 +11,8 @@ export function ContactInfoCard({
   value: string;
 }) {
   return (
-    <Card className="animate-stagger-in">
-      <CardContent>
+    <Card className="animate-stagger-in h-full">
+      <CardContent className="h-full">
         <div className="flex gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[rgb(var(--sg-primary-rgb)/0.24)] bg-[rgb(var(--sg-primary-rgb)/0.12)] text-[var(--sg-primary)]">
             <Icon className="h-5 w-5" />

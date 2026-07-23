@@ -8,7 +8,7 @@ export default function Page() {
     <RoleGuard allowedRoles={AUTHENTICATED_ROLES}>
       <PageHeader
         title="Acerca de SmartGuard 360"
-        description="Informacion del proyecto IoT para restaurantes y cocinas."
+        description="Sistema IoT de monitoreo para restaurantes y cocinas inteligentes."
       />
       <AboutUsPage />
     </RoleGuard>

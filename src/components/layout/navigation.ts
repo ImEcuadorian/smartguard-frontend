@@ -102,7 +102,7 @@ const navigationItems: NavigationItem[] = [
     label: "Acerca de nosotros",
     icon: Info,
     section: "info",
-    roles: ["VIEWER"],
+    roles: AUTHENTICATED_ROLES,
   },
   {
     href: "/profile",
