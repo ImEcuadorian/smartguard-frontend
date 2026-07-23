@@ -27,6 +27,7 @@ export function DonutStat({
         <div className="relative h-28 w-28 shrink-0">
           <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
             <circle
+              className="transition-[stroke-dasharray] duration-700 ease-out"
               cx="50"
               cy="50"
               r="42"

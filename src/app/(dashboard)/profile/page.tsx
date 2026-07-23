@@ -1,11 +1,11 @@
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { ActuatorsPage } from "@/components/actuators/ActuatorsPage";
+import { ProfilePage } from "@/components/profile/ProfilePage";
 import { AUTHENTICATED_ROLES } from "@/lib/auth/permissions";
 
 export default function Page() {
   return (
     <RoleGuard allowedRoles={AUTHENTICATED_ROLES}>
-      <ActuatorsPage />
+      <ProfilePage />
     </RoleGuard>
   );
 }

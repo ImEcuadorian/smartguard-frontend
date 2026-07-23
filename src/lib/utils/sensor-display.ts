@@ -3,6 +3,7 @@ import type {
   SensorResponse,
   SensorType,
 } from "@/lib/api/types";
+import { getSensorTypeLabel as getHumanSensorTypeLabel } from "./labels";
 
 export type SensorDisplayTone =
   | "primary"
@@ -24,24 +25,17 @@ export type SensorDisplayIcon =
   | "sensor";
 
 export interface SensorDisplay {
+  title: string;
   label: string;
   value: string;
+  displayValue: string;
+  statusLabel: string;
   tone: SensorDisplayTone;
   icon: SensorDisplayIcon;
   description: string;
+  isBoolean: boolean;
   isCritical: boolean;
 }
-
-const sensorLabels: Record<SensorType, string> = {
-  DOOR: "Puerta",
-  GAS: "Gas / humo",
-  HUMIDITY: "Humedad",
-  LIGHT: "Luz",
-  TEMPERATURE: "Temperatura",
-  MOTION: "Movimiento",
-  DISTANCE: "Distancia",
-  EMERGENCY_BUTTON: "Emergencia",
-};
 
 const sensorIcons: Record<SensorType, SensorDisplayIcon> = {
   DOOR: "door",
@@ -54,8 +48,14 @@ const sensorIcons: Record<SensorType, SensorDisplayIcon> = {
   EMERGENCY_BUTTON: "emergency",
 };
 
+const booleanSensorTypes = new Set<SensorType>([
+  "DOOR",
+  "MOTION",
+  "EMERGENCY_BUTTON",
+]);
+
 export function getSensorTypeLabel(type: SensorType) {
-  return sensorLabels[type] ?? type;
+  return getHumanSensorTypeLabel(type);
 }
 
 function formatNumber(value: number, unit?: string | null) {
@@ -70,23 +70,35 @@ function getReadingValue(reading?: SensorReadingResponse | null) {
   return reading.textValue;
 }
 
+function buildDisplay(display: Omit<SensorDisplay, "title"> & { title?: string }) {
+  return {
+    ...display,
+    title: display.title ?? display.label,
+  };
+}
+
 export function getSensorDisplay(
   sensor: Pick<SensorResponse, "type" | "unit" | "status">,
   latestReading?: SensorReadingResponse | null,
 ): SensorDisplay {
   const value = getReadingValue(latestReading);
   const icon = sensorIcons[sensor.type] ?? "sensor";
-  const offlineDisplay: SensorDisplay = {
-    label: getSensorTypeLabel(sensor.type),
+  const label = getSensorTypeLabel(sensor.type);
+  const isBoolean = booleanSensorTypes.has(sensor.type);
+  const offlineDisplay: SensorDisplay = buildDisplay({
+    label,
     value: sensor.status === "ACTIVE" ? "Sin lectura" : sensor.status,
+    displayValue: sensor.status === "ACTIVE" ? "Sin lectura" : sensor.status,
+    statusLabel: sensor.status === "ACTIVE" ? "Sin lectura" : sensor.status,
     tone: sensor.status === "ACTIVE" ? "slate" : "amber",
     icon,
     description:
       sensor.status === "ACTIVE"
         ? "Esperando telemetria reciente."
         : "Sensor fuera de operacion normal.",
+    isBoolean,
     isCritical: sensor.status !== "ACTIVE",
-  };
+  });
 
   if (value === null || value === undefined || value === "") {
     return offlineDisplay;
@@ -94,119 +106,158 @@ export function getSensorDisplay(
 
   if (sensor.type === "DOOR") {
     const open = Boolean(value);
-    return {
+    return buildDisplay({
       label: "Puerta",
       value: open ? "Abierta" : "Cerrada",
+      displayValue: open ? "Abierta" : "Cerrada",
+      statusLabel: open ? "Abierta" : "Cerrada",
       tone: open ? "red" : "emerald",
       icon,
       description: open ? "Acceso fisico abierto." : "Acceso fisico cerrado.",
+      isBoolean: true,
       isCritical: open,
-    };
+    });
   }
 
   if (sensor.type === "MOTION") {
     const detected = Boolean(value);
-    return {
+    return buildDisplay({
       label: "Movimiento",
       value: detected ? "Detectado" : "Sin movimiento",
+      displayValue: detected ? "Movimiento detectado" : "Sin movimiento",
+      statusLabel: detected ? "Detectado" : "Sin movimiento",
       tone: detected ? "amber" : "emerald",
       icon,
       description: detected ? "Movimiento detectado en el area." : "Area estable.",
+      isBoolean: true,
       isCritical: detected,
-    };
+    });
   }
 
   if (sensor.type === "EMERGENCY_BUTTON") {
     const active = Boolean(value);
-    return {
+    return buildDisplay({
       label: "Emergencia",
       value: active ? "Emergencia" : "Normal",
+      displayValue: active ? "Emergencia activada" : "Normal",
+      statusLabel: active ? "Emergencia" : "Normal",
       tone: active ? "red" : "emerald",
       icon,
       description: active ? "Boton de emergencia activado." : "Sin emergencia activa.",
+      isBoolean: true,
       isCritical: active,
-    };
+    });
   }
 
   if (typeof value !== "number") {
-    return {
-      label: getSensorTypeLabel(sensor.type),
+    return buildDisplay({
+      label,
       value: String(value),
+      displayValue: String(value),
+      statusLabel: String(value),
       tone: "slate",
       icon,
       description: "Lectura textual recibida desde el dispositivo.",
+      isBoolean: false,
       isCritical: false,
-    };
+    });
   }
 
   if (sensor.type === "GAS") {
     const critical = value >= 700;
     const warning = value >= 400;
-    return {
+    return buildDisplay({
       label: "Gas / humo",
       value: formatNumber(value, sensor.unit),
+      displayValue: formatNumber(value, sensor.unit),
+      statusLabel: critical ? "Riesgo" : warning ? "Nivel elevado" : "Normal",
       tone: critical ? "red" : warning ? "amber" : "emerald",
       icon,
-      description: critical ? "Riesgo alto detectado." : warning ? "Nivel elevado." : "Nivel normal.",
+      description: critical
+        ? "Riesgo alto detectado."
+        : warning
+          ? "Nivel elevado."
+          : "Nivel normal.",
+      isBoolean: false,
       isCritical: critical,
-    };
+    });
   }
 
   if (sensor.type === "TEMPERATURE") {
     const critical = value >= 40;
     const warning = value >= 32 || value <= 5;
-    return {
+    return buildDisplay({
       label: "Temperatura",
-      value: formatNumber(value, sensor.unit ?? "°C"),
+      value: formatNumber(value, sensor.unit ?? "C"),
+      displayValue: formatNumber(value, sensor.unit ?? "C"),
+      statusLabel: critical ? "Critica" : warning ? "Alta/Baja" : "Normal",
       tone: critical ? "red" : warning ? "amber" : "emerald",
       icon,
-      description: critical ? "Temperatura critica." : warning ? "Fuera del rango ideal." : "Rango normal.",
+      description: critical
+        ? "Temperatura critica."
+        : warning
+          ? "Fuera del rango ideal."
+          : "Rango normal.",
+      isBoolean: false,
       isCritical: critical,
-    };
+    });
   }
 
   if (sensor.type === "HUMIDITY") {
     const warning = value < 30 || value > 75;
-    return {
+    return buildDisplay({
       label: "Humedad",
       value: formatNumber(value, sensor.unit ?? "%"),
+      displayValue: formatNumber(value, sensor.unit ?? "%"),
+      statusLabel: warning ? "Fuera de rango" : "Normal",
       tone: warning ? "amber" : "emerald",
       icon,
       description: warning ? "Humedad fuera de rango." : "Humedad normal.",
+      isBoolean: false,
       isCritical: false,
-    };
+    });
   }
 
   if (sensor.type === "LIGHT") {
-    const label = value >= 700 ? "Luz alta" : value >= 300 ? "Luz media" : "Luz baja";
-    return {
+    const lightLabel =
+      value >= 700 ? "Luz alta" : value >= 300 ? "Luz media" : "Luz baja";
+    return buildDisplay({
       label: "Luz",
-      value: sensor.unit ? formatNumber(value, sensor.unit) : label,
+      value: sensor.unit ? formatNumber(value, sensor.unit) : lightLabel,
+      displayValue: sensor.unit ? formatNumber(value, sensor.unit) : lightLabel,
+      statusLabel: lightLabel,
       tone: "sky",
       icon,
-      description: sensor.unit ? label : "Nivel de iluminacion estimado.",
+      description: sensor.unit ? lightLabel : "Nivel de iluminacion estimado.",
+      isBoolean: false,
       isCritical: false,
-    };
+    });
   }
 
   if (sensor.type === "DISTANCE") {
     const close = value <= 20;
-    return {
+    return buildDisplay({
       label: "Distancia",
       value: formatNumber(value, sensor.unit ?? "cm"),
+      displayValue: formatNumber(value, sensor.unit ?? "cm"),
+      statusLabel: close ? "Objeto cercano" : "Normal",
       tone: close ? "amber" : "emerald",
       icon,
       description: close ? "Objeto cercano detectado." : "Distancia normal.",
+      isBoolean: false,
       isCritical: false,
-    };
+    });
   }
 
-  return {
-    label: getSensorTypeLabel(sensor.type),
+  return buildDisplay({
+    label,
     value: formatNumber(value, sensor.unit),
+    displayValue: formatNumber(value, sensor.unit),
+    statusLabel: "Lectura",
     tone: "slate",
     icon,
     description: "Lectura numerica recibida.",
+    isBoolean: false,
     isCritical: false,
-  };
+  });
 }

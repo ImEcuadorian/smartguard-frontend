@@ -54,7 +54,11 @@ export function SystemHealthCard({ modules }: { modules: ModuleHealth[] }) {
             return (
               <div
                 key={module.label}
-                className={cn("rounded-lg border p-3", healthStyles[module.status])}
+                className={cn(
+                  "rounded-lg border p-3 transition duration-300 hover:-translate-y-0.5",
+                  module.status === "online" ? "sg-glow-breathe" : null,
+                  healthStyles[module.status],
+                )}
               >
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   <Icon className="h-4 w-4" />

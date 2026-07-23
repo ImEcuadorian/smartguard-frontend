@@ -42,6 +42,7 @@ export function Button({
     <button
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-md font-medium transition duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
+        "sg-action-button",
         variants[variant],
         sizes[size],
         className,

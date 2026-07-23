@@ -19,6 +19,7 @@ import type {
   ActuatorType,
 } from "@/lib/api/types";
 import { useSendActuatorCommand } from "@/hooks/useActuators";
+import { getActuatorCommandLabel, getActuatorTypeLabel } from "@/lib/utils/labels";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -107,15 +108,15 @@ function QuickControlItem({ actuator }: { actuator: ActuatorResponse }) {
   }
 
   return (
-    <article className="rounded-lg border border-white/10 bg-slate-950/35 p-4">
+    <article className="sg-card-lift rounded-lg border border-white/10 bg-slate-950/35 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate text-sm font-semibold text-slate-100">
             {actuator.name}
           </h3>
           <p className="mt-1 text-xs text-slate-500">
-            {actuator.type}
-            {actuator.location ? ` · ${actuator.location}` : ""}
+            {getActuatorTypeLabel(actuator.type)}
+            {actuator.location ? ` - ${actuator.location}` : ""}
           </p>
         </div>
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/8 text-[var(--sg-primary)]">
@@ -154,7 +155,9 @@ function QuickControlItem({ actuator }: { actuator: ActuatorResponse }) {
       <ConfirmDialog
         open={Boolean(pending)}
         title="Confirmar accion critica"
-        description={`Enviar ${pending?.label ?? "este comando"} a ${actuator.name}.`}
+        description={`Enviar ${
+          pending ? getActuatorCommandLabel(pending.command) : "este comando"
+        } a ${actuator.name}.`}
         confirmLabel="Enviar comando"
         isLoading={sendCommand.isPending}
         onCancel={() => setPending(null)}

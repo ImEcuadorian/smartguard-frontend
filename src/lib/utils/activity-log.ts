@@ -3,6 +3,7 @@ import type {
   AlertResponse,
   SensorResponse,
 } from "@/lib/api/types";
+import { getSensorTypeLabel } from "./labels";
 import type { SensorDisplayTone } from "./sensor-display";
 
 export type ActivityLogType = "alert" | "access" | "sensor" | "actuator";
@@ -64,7 +65,7 @@ export function buildActivityLog({
       id: `sensor-${sensor.id}`,
       type: "sensor",
       title: `Sensor ${sensor.name}`,
-      description: `${sensor.type} reporto actividad reciente.`,
+      description: `${getSensorTypeLabel(sensor.type)} reporto actividad reciente.`,
       result: sensor.status,
       occurredAt: sensor.lastReadingAt,
       tone: sensor.status === "ACTIVE" ? "emerald" : "amber",

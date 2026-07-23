@@ -10,6 +10,7 @@ import {
 } from "@/hooks/useDevices";
 import type { DeviceStatus } from "@/lib/api/types";
 import { canManage } from "@/lib/auth/roles";
+import { getStatusLabel } from "@/lib/utils/labels";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -73,9 +74,9 @@ export function DevicesPage() {
                   }
                 >
                   <option value="">Todos los estados</option>
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="INACTIVE">INACTIVE</option>
-                  <option value="MAINTENANCE">MAINTENANCE</option>
+                  <option value="ACTIVE">{getStatusLabel("ACTIVE")}</option>
+                  <option value="INACTIVE">{getStatusLabel("INACTIVE")}</option>
+                  <option value="MAINTENANCE">{getStatusLabel("MAINTENANCE")}</option>
                 </Select>
               </div>
             </CardContent>

@@ -53,13 +53,18 @@ export function SensorStatusCard({
   const Icon = icons[display.icon];
 
   return (
-    <article className="rounded-lg border border-white/10 bg-slate-950/35 p-4">
+    <article
+      className={cn(
+        "sg-card-lift rounded-lg border border-white/10 bg-slate-950/35 p-4",
+        display.isCritical ? "sg-critical-card" : null,
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-slate-100">{sensor.name}</p>
           <p className="mt-1 text-xs text-slate-500">
-            {getSensorTypeLabel(sensor.type)}
-            {sensor.location ? ` · ${sensor.location}` : ""}
+            {display.title || getSensorTypeLabel(sensor.type)}
+            {sensor.location ? ` - ${sensor.location}` : ""}
           </p>
         </div>
         <div
@@ -79,7 +84,7 @@ export function SensorStatusCard({
         )}
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-        <Badge className={toneClasses[display.tone]}>
+        <Badge className={cn("sg-status-badge", toneClasses[display.tone])}>
           {display.isCritical ? "Atencion" : "Operativo"}
         </Badge>
         <span className="text-xs text-slate-500">

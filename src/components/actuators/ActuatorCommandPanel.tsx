@@ -3,9 +3,10 @@
 import { useState } from "react";
 import type { ActuatorCommandType, ActuatorResponse } from "@/lib/api/types";
 import { useActuatorCommands, useSendActuatorCommand } from "@/hooks/useActuators";
-import { canOperate } from "@/lib/auth/roles";
+import { canSendActuatorCommands } from "@/lib/auth/permissions";
 import type { UserRole } from "@/lib/api/types";
 import { formatDate } from "@/lib/utils/format-date";
+import { getActuatorCommandLabel } from "@/lib/utils/labels";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -40,7 +41,7 @@ export function ActuatorCommandPanel({
   );
   const commandHistory = useActuatorCommands(actuator?.id);
   const sendCommand = useSendActuatorCommand(actuator?.id);
-  const allowed = canOperate(role);
+  const allowed = canSendActuatorCommands(role);
 
   async function submitCommand(command: ActuatorCommandType) {
     await sendCommand.mutateAsync({
@@ -93,7 +94,7 @@ export function ActuatorCommandPanel({
                   : void submitCommand(command)
               }
             >
-              {command}
+              {getActuatorCommandLabel(command)}
             </Button>
           ))}
         </div>
@@ -116,7 +117,7 @@ export function ActuatorCommandPanel({
               <tbody className="divide-y divide-white/10">
                 {commandHistory.data.map((command) => (
                   <tr key={command.id}>
-                    <Td>{command.command}</Td>
+                    <Td>{getActuatorCommandLabel(command.command)}</Td>
                     <Td>
                       <StatusBadge status={command.status} />
                     </Td>
@@ -133,7 +134,9 @@ export function ActuatorCommandPanel({
       <ConfirmDialog
         open={Boolean(pendingCommand)}
         title="Confirmar comando importante"
-        description={`El comando ${pendingCommand ?? ""} puede abrir o desbloquear un acceso fisico.`}
+        description={`El comando ${
+          pendingCommand ? getActuatorCommandLabel(pendingCommand) : ""
+        } puede abrir o desbloquear un acceso fisico.`}
         confirmLabel="Enviar comando"
         isLoading={sendCommand.isPending}
         onCancel={() => setPendingCommand(null)}

@@ -1,7 +1,9 @@
 import {
   Bell,
+  BarChart3,
   CircuitBoard,
   Gauge,
+  Info,
   LockKeyhole,
   RadioReceiver,
   Settings,
@@ -15,11 +17,10 @@ import type { UserRole } from "@/lib/api/types";
 import {
   ADMIN_ROLES,
   AUTHENTICATED_ROLES,
-  OPERATION_ROLES,
   hasAnyRole,
 } from "@/lib/auth/permissions";
 
-type NavigationSection = "main" | "admin" | "account";
+type NavigationSection = "main" | "admin" | "info" | "account";
 
 export interface NavigationItem {
   href: string;
@@ -58,7 +59,7 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/access",
     label: "RFID / Accesos",
-    clientLabel: "Mis Accesos",
+    clientLabel: "Bitacora",
     icon: LockKeyhole,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -66,9 +67,10 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/actuators",
     label: "Actuadores",
+    clientLabel: "Control de alarma",
     icon: SlidersHorizontal,
     section: "main",
-    roles: OPERATION_ROLES,
+    roles: AUTHENTICATED_ROLES,
   },
   {
     href: "/alerts",
@@ -86,9 +88,30 @@ const navigationItems: NavigationItem[] = [
     roles: ADMIN_ROLES,
   },
   {
+    href: "/analytics",
+    label: "Analitica",
+    icon: BarChart3,
+    section: "admin",
+    roles: ADMIN_ROLES,
+  },
+  {
+    href: "/about",
+    label: "Acerca de nosotros",
+    icon: Info,
+    section: "info",
+    roles: ["VIEWER"],
+  },
+  {
+    href: "/profile",
+    label: "Mi Perfil",
+    icon: UserCircle,
+    section: "account",
+    roles: ["VIEWER"],
+  },
+  {
     href: "/settings",
     label: "Configuracion",
-    clientLabel: "Perfil",
+    clientLabel: "Configuracion",
     icon: Settings,
     section: "account",
     roles: AUTHENTICATED_ROLES,
@@ -108,6 +131,7 @@ export function getSectionLabel(section: NavigationSection) {
   const labels: Record<NavigationSection, string> = {
     main: "Operacion",
     admin: "Administracion",
+    info: "Informacion",
     account: "Cuenta",
   };
 

@@ -29,7 +29,7 @@ export function Topbar() {
         </div>
 
         <div className="flex min-w-0 items-center justify-end gap-2 sm:gap-3">
-          <Badge className="hidden h-10 items-center gap-2 border-emerald-400/25 bg-emerald-400/10 px-3 text-emerald-100 md:inline-flex">
+          <Badge className="sg-soft-pulse hidden h-10 items-center gap-2 border-emerald-400/25 bg-emerald-400/10 px-3 text-emerald-100 md:inline-flex">
             <CheckCircle2 className="h-4 w-4" />
             Backend activo
           </Badge>

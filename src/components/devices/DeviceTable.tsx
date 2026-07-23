@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import Link from "next/link";
 import type { DeviceResponse, DeviceStatus } from "@/lib/api/types";
 import { formatDate } from "@/lib/utils/format-date";
+import { getStatusLabel } from "@/lib/utils/labels";
 import { DataTable, Td, Th } from "@/components/ui/DataTable";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Select } from "@/components/ui/Select";
@@ -59,7 +60,7 @@ export function DeviceTable({
                 >
                   {statuses.map((status) => (
                     <option key={status} value={status}>
-                      {status}
+                      {getStatusLabel(status)}
                     </option>
                   ))}
                 </Select>

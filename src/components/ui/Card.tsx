@@ -5,7 +5,7 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "sg-glass rounded-lg text-slate-100 transition duration-300 ease-out hover:border-white/20 hover:shadow-[var(--sg-glow)]",
+        "sg-glass sg-card-lift animate-fade-in-up rounded-lg text-slate-100 transition duration-300 ease-out hover:border-white/20 hover:shadow-[var(--sg-glow)]",
         className,
       )}
       {...props}

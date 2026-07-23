@@ -32,14 +32,14 @@ export function MetricCard({
   hasError?: boolean;
 }) {
   return (
-    <Card className="min-h-36 overflow-hidden">
+    <Card className={cn("min-h-36 overflow-hidden", tone === "red" ? "sg-critical-card" : null)}>
       <CardContent className="flex h-full flex-col justify-between gap-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
               {title}
             </p>
-            <p className="mt-3 text-3xl font-semibold text-slate-50">
+            <p className="animate-metric-count mt-3 text-3xl font-semibold text-slate-50">
               {isLoading ? "--" : value}
             </p>
           </div>

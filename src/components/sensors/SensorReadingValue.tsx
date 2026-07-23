@@ -14,7 +14,10 @@ export function SensorReadingValue({ display }: { display: SensorDisplay }) {
   return (
     <div>
       <p className={cn("text-lg font-semibold", toneClasses[display.tone])}>
-        {display.value}
+        {display.displayValue}
+      </p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-normal text-slate-500">
+        {display.statusLabel}
       </p>
       <p className="mt-1 text-xs leading-5 text-slate-500">{display.description}</p>
     </div>

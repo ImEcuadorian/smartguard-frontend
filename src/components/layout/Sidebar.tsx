@@ -25,7 +25,7 @@ export function Sidebar() {
     },
     {},
   );
-  const sectionOrder = ["main", "admin", "account"];
+  const sectionOrder = ["main", "admin", "info", "account"];
 
   return (
     <aside className="hidden min-h-screen w-72 shrink-0 border-r border-white/10 bg-slate-950/70 text-white shadow-2xl shadow-black/30 backdrop-blur-2xl lg:flex lg:flex-col">
