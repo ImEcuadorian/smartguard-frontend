@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import Link from "next/link";
 import type { SensorResponse, SensorStatus } from "@/lib/api/types";
 import { formatDate } from "@/lib/utils/format-date";
+import { getSensorTypeLabel, getStatusLabel } from "@/lib/utils/labels";
 import { DataTable, Td, Th } from "@/components/ui/DataTable";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Select } from "@/components/ui/Select";
@@ -49,7 +50,7 @@ export function SensorTable({
           <tr key={sensor.id}>
             <Td className="font-mono text-xs">{sensor.code}</Td>
             <Td className="font-medium text-slate-100">{sensor.name}</Td>
-            <Td>{sensor.type}</Td>
+            <Td>{getSensorTypeLabel(sensor.type)}</Td>
             <Td>{sensor.unit ?? "N/A"}</Td>
             <Td>
               {canEdit ? (
@@ -62,7 +63,7 @@ export function SensorTable({
                 >
                   {statuses.map((status) => (
                     <option key={status} value={status}>
-                      {status}
+                      {getStatusLabel(status)}
                     </option>
                   ))}
                 </Select>

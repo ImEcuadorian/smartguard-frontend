@@ -72,20 +72,20 @@ const tabs: Array<{
 }> = [
   {
     id: "overview",
-    label: "Resumen general",
-    description: "KPIs globales y salud",
+    label: "Resumen 360",
+    description: "KPIs de cocina y salud",
     icon: Gauge,
   },
   {
     id: "devices-sensors",
-    label: "Dispositivos y sensores",
-    description: "Inventario y telemetria",
+    label: "Dispositivos",
+    description: "ESP32, sensores y telemetria",
     icon: CircuitBoard,
   },
   {
     id: "security",
-    label: "Seguridad y alertas",
-    description: "Riesgo y severidad",
+    label: "Seguridad",
+    description: "Riesgos y alertas",
     icon: AlertTriangle,
   },
   {
@@ -108,8 +108,8 @@ const tabs: Array<{
   },
   {
     id: "analytics",
-    label: "Analitica",
-    description: "Tendencias del sistema",
+    label: "Analitica 360",
+    description: "Datos reales del sistema",
     icon: BarChart3,
   },
 ];
@@ -125,7 +125,15 @@ export function AdminDashboardTabs({
 }) {
   const visibleTabs = isAdmin
     ? tabs
-    : tabs.filter((tab) => !["users", "analytics"].includes(tab.id));
+    : tabs
+        .filter((tab) => !["users", "analytics"].includes(tab.id))
+        .map((tab) =>
+          tab.id === "overview"
+            ? { ...tab, label: "Operacion", description: "Monitoreo 24 horas" }
+            : tab.id === "security"
+              ? { ...tab, label: "Alertas", description: "Riesgos abiertos" }
+              : tab,
+        );
 
   return (
     <div className="rounded-lg border border-white/10 bg-slate-950/45 p-2 backdrop-blur-2xl">
@@ -140,7 +148,7 @@ export function AdminDashboardTabs({
               type="button"
               onClick={() => onChange(tab.id)}
               className={cn(
-                "animate-tab-slide group flex min-h-20 items-start gap-3 rounded-lg border p-3 text-left transition duration-300",
+                "animate-tab-fade group flex min-h-20 items-start gap-3 rounded-lg border p-3 text-left transition duration-300",
                 active
                   ? "border-[rgb(var(--sg-primary-rgb)/0.45)] bg-[rgb(var(--sg-primary-rgb)/0.16)] text-slate-50 shadow-[var(--sg-glow)]"
                   : "border-white/8 bg-white/5 text-slate-300 hover:border-white/15 hover:bg-white/10",

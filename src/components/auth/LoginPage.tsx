@@ -1,14 +1,17 @@
 "use client";
 
 import {
-  Activity,
-  Cpu,
+  Bell,
+  DoorClosed,
+  Droplets,
   Eye,
   EyeOff,
+  Flame,
   LockKeyhole,
-  RadioReceiver,
+  Move,
   ShieldCheck,
-  Siren,
+  Thermometer,
+  Utensils,
   UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,10 +27,36 @@ import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
 import { Input, Label } from "@/components/ui/Input";
 
 const featureChips = [
-  { label: "ESP32", icon: Cpu },
-  { label: "Sensores", icon: RadioReceiver },
-  { label: "RFID", icon: LockKeyhole },
-  { label: "Alertas", icon: Siren },
+  {
+    label: "Temperatura",
+    description: "Control termico de cocina",
+    icon: Thermometer,
+  },
+  {
+    label: "Humedad",
+    description: "Ambiente supervisado",
+    icon: Droplets,
+  },
+  {
+    label: "Gas / Humo",
+    description: "Prevencion de riesgos",
+    icon: Flame,
+  },
+  {
+    label: "Puerta",
+    description: "Estado de accesos",
+    icon: DoorClosed,
+  },
+  {
+    label: "Movimiento",
+    description: "Deteccion operativa",
+    icon: Move,
+  },
+  {
+    label: "Alarma",
+    description: "Respuesta inmediata",
+    icon: Bell,
+  },
 ];
 
 export function LoginPage() {
@@ -60,44 +89,60 @@ export function LoginPage() {
   return (
     <main className="relative isolate min-h-screen overflow-hidden px-4 pb-28 pt-8 text-white sm:pb-10 lg:px-8">
       <AnimatedBackground />
-      <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-7xl items-center">
-        <div className="grid w-full items-center gap-8 lg:grid-cols-[minmax(0,1fr)_460px] xl:gap-14">
-          <section className="animate-sg-fade-up max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-sm text-slate-100 backdrop-blur">
-              <ShieldCheck className="h-4 w-4 text-[var(--sg-primary)]" />
-              SmartGuard Security Console
+      <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-6xl items-center">
+        <div className="grid w-full items-center justify-center gap-10 lg:grid-cols-[minmax(0,640px)_460px] xl:gap-16">
+          <section className="animate-sg-fade-up w-full max-w-[40rem] justify-self-center">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-slate-100 backdrop-blur">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[rgb(var(--sg-primary-rgb)/0.16)] text-[var(--sg-primary)]">
+                <ShieldCheck className="h-4 w-4" />
+              </span>
+              <span className="font-medium">SmartGuard 360</span>
+              <span className="hidden h-4 w-px bg-white/15 sm:block" />
+              <span className="hidden text-xs text-slate-400 sm:block">
+                Kitchen IoT Console
+              </span>
             </div>
 
-            <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-normal text-white sm:text-6xl">
-              Monitoreo IoT para seguridad inteligente.
+            <h1 className="mt-6 max-w-[39rem] text-4xl font-semibold leading-[1.04] tracking-normal text-white sm:text-5xl xl:text-[3.55rem]">
+              Monitoreo IoT para cocinas inteligentes.
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">
-              Controla dispositivos ESP32, sensores, accesos RFID, actuadores y
-              alertas desde una consola conectada al backend real.
+            <p className="mt-5 max-w-[36rem] text-base leading-7 text-slate-300">
+              Supervisa temperatura, humedad, gas, accesos, alertas y actuadores
+              de tu restaurante desde una consola segura en tiempo real.
             </p>
 
-            <div className="mt-8 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
-              {featureChips.map((item) => {
+            <div className="mt-8 grid max-w-[42rem] grid-cols-2 gap-3 sm:grid-cols-3">
+              {featureChips.map((item, index) => {
                 const Icon = item.icon;
 
                 return (
                   <div
                     key={item.label}
-                    className="rounded-lg border border-white/10 bg-white/8 p-3 text-sm text-slate-200 shadow-lg shadow-black/10 backdrop-blur transition duration-300 hover:border-[rgb(var(--sg-primary-rgb)/0.35)] hover:bg-white/12"
+                    className="animate-stagger-in rounded-lg border border-white/10 bg-white/8 p-4 text-sm text-slate-200 shadow-lg shadow-black/10 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[rgb(var(--sg-primary-rgb)/0.35)] hover:bg-white/12 hover:shadow-[var(--sg-glow)]"
+                    style={{ animationDelay: `${index * 55}ms` }}
                   >
-                    <Icon className="mb-2 h-4 w-4 text-[var(--sg-primary)]" />
-                    {item.label}
+                    <Icon className="h-4 w-4 text-[var(--sg-primary)]" />
+                    <p className="mt-3 font-semibold text-slate-100">{item.label}</p>
+                    <p className="mt-1 min-h-9 text-xs leading-5 text-slate-500">
+                      {item.description}
+                    </p>
                   </div>
                 );
               })}
             </div>
 
-            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
-              {["Backend activo", "JWT seguro", "React Query"].map((item) => (
+            <div className="mt-8 grid max-w-[42rem] grid-cols-2 gap-3 lg:grid-cols-4">
+              {[
+                "Backend activo",
+                "JWT seguro",
+                "Monitoreo 24/7",
+                "ESP32 conectado",
+              ].map((item, index) => (
                 <div
                   key={item}
-                  className="rounded-lg border border-white/10 bg-slate-950/35 px-4 py-3 text-sm text-slate-300 backdrop-blur"
+                  className="animate-stagger-in flex min-h-16 items-center rounded-lg border border-white/10 bg-slate-950/35 px-4 py-3 text-sm text-slate-300 backdrop-blur"
+                  style={{ animationDelay: `${360 + index * 55}ms` }}
                 >
                   <span className="mr-2 inline-flex h-2 w-2 rounded-full bg-[var(--sg-primary)] shadow-[var(--sg-glow)]" />
                   {item}
@@ -119,12 +164,12 @@ export function LoginPage() {
                     )}
                   </div>
                   <h2 className="text-xl font-semibold text-slate-50">
-                    {mode === "login" ? "Acceso seguro" : "Crear cuenta cliente"}
+                    {mode === "login" ? "Acceso seguro 360" : "Crear cuenta cliente"}
                   </h2>
                   <p className="mt-1 text-sm leading-6 text-slate-400">
                     {mode === "login"
-                      ? "Usa tus credenciales de SmartGuard."
-                      : "Registro visual preparado sin usar endpoints protegidos."}
+                      ? "Ingresa a la consola de monitoreo de tu cocina."
+                      : "Solicitud visual preparada para cuentas de restaurante."}
                   </p>
                 </div>
                 <div className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-100 shadow-[0_0_22px_rgb(52_211_153/0.12)]">
@@ -191,8 +236,8 @@ export function LoginPage() {
                     type="submit"
                     isLoading={loginStatus === "pending"}
                   >
-                    <Activity className="h-4 w-4" />
-                    Entrar al dashboard
+                    <Utensils className="h-4 w-4" />
+                    Entrar a SmartGuard 360
                   </Button>
                 </form>
               ) : (

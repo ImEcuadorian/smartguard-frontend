@@ -110,7 +110,7 @@ export function PremiumThemeSelect({
           role="listbox"
           aria-label="Tema visual"
           className={cn(
-            "sg-theme-scrollbar absolute left-0 z-[70] max-h-[280px] w-full min-w-[17rem] animate-sg-fade-up overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-slate-950/92 p-1.5 pr-2 shadow-2xl shadow-black/45 backdrop-blur-2xl",
+            "sg-theme-scrollbar absolute left-0 z-[95] max-h-[280px] w-full min-w-[17rem] animate-sg-fade-up overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-slate-950/98 p-1.5 pr-2 shadow-2xl shadow-black/55 ring-1 ring-white/5 backdrop-blur-2xl",
             placement === "up"
               ? "bottom-full mb-2 origin-bottom"
               : "top-full mt-2 origin-top",

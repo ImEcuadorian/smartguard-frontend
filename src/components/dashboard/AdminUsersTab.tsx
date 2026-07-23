@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, UserCheck, UserX, UsersRound } from "lucide-react";
 import { formatDate } from "@/lib/utils/format-date";
+import { getHumanRoleLabel } from "@/lib/utils/labels";
 import { DataTable, Td, Th } from "@/components/ui/DataTable";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -17,15 +18,6 @@ export function AdminUsersTab({
   states,
   isAdmin,
 }: AdminDashboardTabProps) {
-  const roleCounts = usersData.reduce(
-    (acc, user) => {
-      acc[user.role] = (acc[user.role] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-  const disabledUsers = usersData.filter((user) => user.status === "DISABLED").length;
-
   if (!isAdmin) {
     return (
       <ErrorState
@@ -49,7 +41,7 @@ export function AdminUsersTab({
         />
         <MetricCard
           title="Clientes"
-          value={roleCounts.VIEWER ?? 0}
+          value={stats.users.viewers}
           description="VIEWER mostrado como CLIENTE"
           icon={UserCheck}
           tone="emerald"
@@ -58,8 +50,8 @@ export function AdminUsersTab({
         />
         <MetricCard
           title="Admins / operadores"
-          value={(roleCounts.ADMIN ?? 0) + (roleCounts.OPERATOR ?? 0)}
-          description={`${roleCounts.ADMIN ?? 0} admin, ${roleCounts.OPERATOR ?? 0} operator`}
+          value={stats.users.admins + stats.users.operators}
+          description={`${stats.users.admins} admin, ${stats.users.operators} operadores`}
           icon={ShieldCheck}
           tone="amber"
           isLoading={states.users.isLoading}
@@ -67,10 +59,10 @@ export function AdminUsersTab({
         />
         <MetricCard
           title="Deshabilitados"
-          value={disabledUsers}
+          value={stats.users.disabled}
           description="Usuarios sin acceso"
           icon={UserX}
-          tone={disabledUsers > 0 ? "red" : "slate"}
+          tone={stats.users.disabled > 0 ? "red" : "slate"}
           isLoading={states.users.isLoading}
           hasError={states.users.isError}
         />
@@ -116,7 +108,7 @@ export function AdminUsersTab({
                       <p className="text-xs text-slate-500">{user.username}</p>
                     </div>
                   </Td>
-                  <Td>{user.role === "VIEWER" ? "CLIENTE" : user.role}</Td>
+                  <Td>{getHumanRoleLabel(user.role)}</Td>
                   <Td>
                     <StatusBadge status={user.status} />
                   </Td>

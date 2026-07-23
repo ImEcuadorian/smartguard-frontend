@@ -12,7 +12,9 @@ import {
 import type { UserRole, UserStatus } from "@/lib/api/types";
 import { canManage } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/utils/format-date";
+import { getHumanRoleLabel, getStatusLabel } from "@/lib/utils/labels";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
+import { ProfilePage } from "@/components/profile/ProfilePage";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -68,6 +70,10 @@ export function SettingsPage() {
     }
   }
 
+  if (role === "VIEWER") {
+    return <ProfilePage />;
+  }
+
   return (
     <>
       <PageHeader
@@ -101,7 +107,7 @@ export function SettingsPage() {
                   label="Rol"
                   value={
                     <Badge className="border-white/10 bg-white/10 text-slate-200">
-                      {currentUser.data?.role ?? "N/A"}
+                      {getHumanRoleLabel(currentUser.data?.role)}
                     </Badge>
                   }
                 />
@@ -262,9 +268,9 @@ export function SettingsPage() {
                     }))
                   }
                 >
-                  <option value="VIEWER">VIEWER</option>
-                  <option value="OPERATOR">OPERATOR</option>
-                  <option value="ADMIN">ADMIN</option>
+                  <option value="VIEWER">{getHumanRoleLabel("VIEWER")}</option>
+                  <option value="OPERATOR">{getHumanRoleLabel("OPERATOR")}</option>
+                  <option value="ADMIN">{getHumanRoleLabel("ADMIN")}</option>
                 </Select>
               <Button type="submit" isLoading={createUser.isPending}>
                 Crear
@@ -295,7 +301,7 @@ export function SettingsPage() {
                       <tr key={user.id}>
                         <Td className="font-medium text-slate-100">{user.username}</Td>
                         <Td>{user.displayName}</Td>
-                        <Td>{user.role}</Td>
+                        <Td>{getHumanRoleLabel(user.role)}</Td>
                         <Td>
                           <StatusBadge status={user.status} />
                         </Td>
@@ -311,8 +317,8 @@ export function SettingsPage() {
                             }
                             className="max-w-36"
                           >
-                            <option value="ACTIVE">ACTIVE</option>
-                            <option value="DISABLED">DISABLED</option>
+                            <option value="ACTIVE">{getStatusLabel("ACTIVE")}</option>
+                            <option value="DISABLED">{getStatusLabel("DISABLED")}</option>
                           </Select>
                         </Td>
                       </tr>

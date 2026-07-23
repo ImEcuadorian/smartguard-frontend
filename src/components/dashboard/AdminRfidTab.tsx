@@ -18,10 +18,6 @@ export function AdminRfidTab({
   accessReadersData,
   states,
 }: AdminDashboardTabProps) {
-  const grantedPercent = stats.access.total
-    ? Math.round((stats.access.granted / stats.access.total) * 100)
-    : 0;
-
   return (
     <div className="space-y-6">
       <StatsOverview>
@@ -36,7 +32,7 @@ export function AdminRfidTab({
         <MetricCard
           title="Accesos concedidos"
           value={stats.access.granted}
-          description={`${grantedPercent}% permitidos`}
+          description={`${stats.access.grantedRate}% permitidos`}
           icon={ShieldCheck}
           tone="emerald"
           isLoading={states.accessEvents.isLoading}

@@ -19,7 +19,7 @@ export function AccessRestricted({
             <LockKeyhole className="h-6 w-6" />
           </div>
           <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--sg-primary)]">
-            SmartGuard access policy
+            SmartGuard 360 access policy
           </p>
           <h2 className="mt-3 text-2xl font-semibold text-slate-50">{title}</h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-400">

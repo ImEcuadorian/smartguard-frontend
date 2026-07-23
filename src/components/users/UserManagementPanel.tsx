@@ -10,6 +10,7 @@ import {
 import type { UserRole, UserStatus } from "@/lib/api/types";
 import { canManage } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/utils/format-date";
+import { getHumanRoleLabel, getStatusLabel } from "@/lib/utils/labels";
 import { AccessRestricted } from "@/components/auth/AccessRestricted";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -108,9 +109,9 @@ export function UserManagementPanel() {
               }))
             }
           >
-            <option value="VIEWER">CLIENTE</option>
-            <option value="OPERATOR">OPERATOR</option>
-            <option value="ADMIN">ADMIN</option>
+            <option value="VIEWER">{getHumanRoleLabel("VIEWER")}</option>
+            <option value="OPERATOR">{getHumanRoleLabel("OPERATOR")}</option>
+            <option value="ADMIN">{getHumanRoleLabel("ADMIN")}</option>
           </Select>
           <Button type="submit" isLoading={createUser.isPending}>
             Crear
@@ -144,7 +145,7 @@ export function UserManagementPanel() {
                   <Td>{user.displayName}</Td>
                   <Td>
                     <Badge className="border-white/10 bg-white/10 text-slate-200">
-                      {user.role === "VIEWER" ? "CLIENTE" : user.role}
+                      {getHumanRoleLabel(user.role)}
                     </Badge>
                   </Td>
                   <Td>
@@ -162,8 +163,8 @@ export function UserManagementPanel() {
                       }
                       className="max-w-36"
                     >
-                      <option value="ACTIVE">ACTIVE</option>
-                      <option value="DISABLED">DISABLED</option>
+                      <option value="ACTIVE">{getStatusLabel("ACTIVE")}</option>
+                      <option value="DISABLED">{getStatusLabel("DISABLED")}</option>
                     </Select>
                   </Td>
                 </tr>

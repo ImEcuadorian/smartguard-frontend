@@ -11,6 +11,7 @@ import {
 } from "@/hooks/useSensors";
 import type { SensorStatus, SensorType } from "@/lib/api/types";
 import { canManage, canOperate } from "@/lib/auth/roles";
+import { getSensorTypeLabel, getStatusLabel } from "@/lib/utils/labels";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -61,7 +62,7 @@ export function SensorsPage() {
     <>
       <PageHeader
         title="Sensores"
-        description="Sensores conectados a dispositivos ESP32, con filtros por dispositivo, estado y tipo."
+        description="Telemetria SmartGuard 360 para puerta, movimiento, gas, temperatura, humedad, luz y emergencia."
         actions={
           canCreate ? (
             <Button type="button" onClick={() => setCreateOpen(true)}>
@@ -97,9 +98,9 @@ export function SensorsPage() {
                 }
               >
                 <option value="">Todos los estados</option>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="MAINTENANCE">MAINTENANCE</option>
+                <option value="ACTIVE">{getStatusLabel("ACTIVE")}</option>
+                <option value="INACTIVE">{getStatusLabel("INACTIVE")}</option>
+                <option value="MAINTENANCE">{getStatusLabel("MAINTENANCE")}</option>
               </Select>
               <Select
                 value={type}
@@ -110,7 +111,7 @@ export function SensorsPage() {
                 <option value="">Todos los tipos</option>
                 {sensorTypes.map((sensorType) => (
                   <option key={sensorType} value={sensorType}>
-                    {sensorType}
+                    {getSensorTypeLabel(sensorType)}
                   </option>
                 ))}
               </Select>

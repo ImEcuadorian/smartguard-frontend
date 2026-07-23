@@ -17,6 +17,7 @@ import type { UserRole } from "@/lib/api/types";
 import {
   ADMIN_ROLES,
   AUTHENTICATED_ROLES,
+  OPERATION_ROLES,
   hasAnyRole,
 } from "@/lib/auth/permissions";
 
@@ -26,6 +27,7 @@ export interface NavigationItem {
   href: string;
   label: string;
   clientLabel?: string;
+  operatorLabel?: string;
   icon: LucideIcon;
   section: NavigationSection;
   roles: readonly UserRole[];
@@ -34,8 +36,9 @@ export interface NavigationItem {
 const navigationItems: NavigationItem[] = [
   {
     href: "/",
-    label: "Dashboard",
-    clientLabel: "Mi Dashboard",
+    label: "Dashboard 360",
+    clientLabel: "Mi cocina",
+    operatorLabel: "Dashboard operativo",
     icon: Gauge,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -43,7 +46,7 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/devices",
     label: "Dispositivos",
-    clientLabel: "Mis Dispositivos",
+    clientLabel: "Mis dispositivos",
     icon: CircuitBoard,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -51,7 +54,7 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/sensors",
     label: "Sensores",
-    clientLabel: "Mis Sensores",
+    clientLabel: "Sensores",
     icon: RadioReceiver,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -67,7 +70,7 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/actuators",
     label: "Actuadores",
-    clientLabel: "Control de alarma",
+    clientLabel: "Control",
     icon: SlidersHorizontal,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -75,7 +78,7 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/alerts",
     label: "Alertas",
-    clientLabel: "Mis Alertas",
+    clientLabel: "Alertas",
     icon: Bell,
     section: "main",
     roles: AUTHENTICATED_ROLES,
@@ -103,7 +106,7 @@ const navigationItems: NavigationItem[] = [
   },
   {
     href: "/profile",
-    label: "Mi Perfil",
+    label: "Mi perfil",
     icon: UserCircle,
     section: "account",
     roles: ["VIEWER"],
@@ -111,20 +114,41 @@ const navigationItems: NavigationItem[] = [
   {
     href: "/settings",
     label: "Configuracion",
-    clientLabel: "Configuracion",
     icon: Settings,
     section: "account",
-    roles: AUTHENTICATED_ROLES,
+    roles: OPERATION_ROLES,
   },
 ];
 
 export function getNavigationItems(role: UserRole | undefined) {
-  return navigationItems
+  const items = navigationItems
     .filter((item) => hasAnyRole(role, item.roles))
     .map((item) => ({
       ...item,
-      label: role === "VIEWER" && item.clientLabel ? item.clientLabel : item.label,
+      label:
+        role === "VIEWER" && item.clientLabel
+          ? item.clientLabel
+          : role === "OPERATOR" && item.operatorLabel
+            ? item.operatorLabel
+            : item.label,
     }));
+
+  if (role !== "VIEWER") return items;
+
+  const viewerOrder = new Map([
+    ["/", 0],
+    ["/devices", 1],
+    ["/sensors", 2],
+    ["/alerts", 3],
+    ["/access", 4],
+    ["/actuators", 5],
+    ["/about", 6],
+    ["/profile", 7],
+  ]);
+
+  return [...items].sort(
+    (a, b) => (viewerOrder.get(a.href) ?? 99) - (viewerOrder.get(b.href) ?? 99),
+  );
 }
 
 export function getSectionLabel(section: NavigationSection) {
@@ -147,9 +171,13 @@ export function getRouteTitle(pathname: string, role: UserRole | undefined) {
     .find((navItem) => pathname === navItem.href || pathname.startsWith(`${navItem.href}/`));
 
   if (item) return item.label;
-  if (pathname === "/") return role === "VIEWER" ? "Mi Dashboard" : "Dashboard";
+  if (pathname === "/") {
+    if (role === "VIEWER") return "Mi cocina";
+    if (role === "OPERATOR") return "Dashboard operativo";
+    return "Dashboard 360";
+  }
 
-  return "SmartGuard";
+  return "SmartGuard 360";
 }
 
 export const BrandIcon = ShieldCheck;

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ActuatorResponse } from "@/lib/api/types";
+import { getActuatorTypeLabel } from "@/lib/utils/labels";
 import { Button } from "@/components/ui/Button";
 import { DataTable, Td, Th } from "@/components/ui/DataTable";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -42,7 +43,7 @@ export function ActuatorTable({
           <tr key={actuator.id}>
             <Td className="font-mono text-xs">{actuator.code}</Td>
             <Td className="font-medium text-slate-100">{actuator.name}</Td>
-            <Td>{actuator.type}</Td>
+            <Td>{getActuatorTypeLabel(actuator.type)}</Td>
             <Td>
               <StatusBadge status={actuator.status} />
             </Td>

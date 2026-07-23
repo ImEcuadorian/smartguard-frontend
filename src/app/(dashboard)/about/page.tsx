@@ -1,5 +1,5 @@
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { AboutUsPanel } from "@/components/dashboard/AboutUsPanel";
+import { AboutUsPage } from "@/components/about/AboutUsPage";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AUTHENTICATED_ROLES } from "@/lib/auth/permissions";
 
@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <RoleGuard allowedRoles={AUTHENTICATED_ROLES}>
       <PageHeader
-        title="Acerca de nosotros"
-        description="Informacion del proyecto SmartGuard para usuarios finales."
+        title="Acerca de SmartGuard 360"
+        description="Informacion del proyecto IoT para restaurantes y cocinas."
       />
-      <AboutUsPanel />
+      <AboutUsPage />
     </RoleGuard>
   );
 }

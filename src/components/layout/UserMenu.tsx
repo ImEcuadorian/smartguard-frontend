@@ -2,6 +2,7 @@
 
 import {
   ChevronDown,
+  Info,
   LogOut,
   Settings,
   UserCircle,
@@ -19,6 +20,7 @@ export function UserMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const initial = String(username ?? "U").slice(0, 1).toUpperCase();
+  const isViewer = role === "VIEWER";
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
@@ -74,7 +76,7 @@ export function UserMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-[min(calc(100vw-2rem),20rem)] origin-top-right animate-sg-fade-up overflow-hidden rounded-lg border border-white/10 bg-slate-950/90 shadow-2xl shadow-black/40 backdrop-blur-2xl"
+          className="absolute right-0 top-full z-[90] mt-2 w-[min(calc(100vw-2rem),20rem)] origin-top-right animate-sg-fade-up overflow-hidden rounded-lg border border-white/10 bg-slate-950/98 shadow-2xl shadow-black/55 ring-1 ring-white/5 backdrop-blur-2xl"
         >
           <div className="border-b border-white/10 p-4">
             <div className="flex items-center gap-3">
@@ -93,12 +95,18 @@ export function UserMenu() {
           </div>
 
           <div className="p-2">
-            <MenuLink href="/settings" icon={UserCircle} onClick={() => setOpen(false)}>
-              Ver perfil
+            <MenuLink href="/profile" icon={UserCircle} onClick={() => setOpen(false)}>
+              {isViewer ? "Mi perfil" : "Ver perfil"}
             </MenuLink>
-            <MenuLink href="/settings" icon={Settings} onClick={() => setOpen(false)}>
-              Configuracion
-            </MenuLink>
+            {isViewer ? (
+              <MenuLink href="/about" icon={Info} onClick={() => setOpen(false)}>
+                Acerca de nosotros
+              </MenuLink>
+            ) : (
+              <MenuLink href="/settings" icon={Settings} onClick={() => setOpen(false)}>
+                Configuracion
+              </MenuLink>
+            )}
           </div>
 
           <div className="border-t border-white/10 p-2">

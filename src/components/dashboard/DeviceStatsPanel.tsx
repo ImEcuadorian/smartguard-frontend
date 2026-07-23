@@ -122,7 +122,7 @@ export function DeviceStatsPanel({
                 </div>
                 <div className="h-2 flex-1 rounded-full bg-white/10">
                   <div
-                    className="h-full rounded-full bg-[var(--sg-primary)] shadow-[var(--sg-glow)] transition-all duration-700"
+                    className="h-full origin-left animate-progress-grow rounded-full bg-[var(--sg-primary)] shadow-[var(--sg-glow)] transition-all duration-700"
                     style={{ width: `${healthScore}%` }}
                   />
                 </div>

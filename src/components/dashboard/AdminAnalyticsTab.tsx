@@ -1,5 +1,13 @@
-import { BarChart3, CircuitBoard, Fingerprint, RadioReceiver } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  CircuitBoard,
+  Fingerprint,
+  RadioReceiver,
+  SlidersHorizontal,
+} from "lucide-react";
 import type { SensorType } from "@/lib/api/types";
+import { getActuatorTypeLabel } from "@/lib/utils/labels";
 import { getSensorTypeLabel } from "@/lib/utils/sensor-display";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { LoadingState } from "@/components/ui/LoadingState";
@@ -51,6 +59,40 @@ export function AdminAnalyticsTab({
           ) : (
             <RfidEventsChart events={stats.access.visible} />
           )}
+        </ActivityPanel>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <ActivityPanel
+          title="Actuadores por tipo"
+          description="Distribucion real de buzzer, LED, rele, servo y cerradura."
+          icon={SlidersHorizontal}
+        >
+          <DeviceStatusChart
+            title="Tipos de actuador"
+            items={Object.entries(stats.actuators.byType).map(([type, value], index) => ({
+              label: getActuatorTypeLabel(type),
+              value: value ?? 0,
+              color:
+                ["bg-amber-400", "bg-sky-400", "bg-emerald-400", "bg-red-400", "bg-purple-400"][
+                  index % 5
+                ],
+            }))}
+          />
+        </ActivityPanel>
+        <ActivityPanel
+          title="Alertas por estado"
+          description="Abiertas, reconocidas y resueltas con datos del backend."
+          icon={AlertTriangle}
+        >
+          <DeviceStatusChart
+            title="Estados de alerta"
+            items={[
+              { label: "Abiertas", value: stats.alerts.open, color: "bg-red-400" },
+              { label: "Reconocidas", value: stats.alerts.acknowledged, color: "bg-amber-400" },
+              { label: "Resueltas", value: stats.alerts.resolved, color: "bg-emerald-400" },
+            ]}
+          />
         </ActivityPanel>
       </section>
 

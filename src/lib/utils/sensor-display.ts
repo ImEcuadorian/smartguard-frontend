@@ -33,6 +33,7 @@ export interface SensorDisplay {
   tone: SensorDisplayTone;
   icon: SensorDisplayIcon;
   description: string;
+  recommendation: string;
   isBoolean: boolean;
   isCritical: boolean;
 }
@@ -96,6 +97,10 @@ export function getSensorDisplay(
       sensor.status === "ACTIVE"
         ? "Esperando telemetria reciente."
         : "Sensor fuera de operacion normal.",
+    recommendation:
+      sensor.status === "ACTIVE"
+        ? "Verifica que el ESP32 envie una lectura reciente."
+        : "Revisa conexion, energia o mantenimiento del sensor.",
     isBoolean,
     isCritical: sensor.status !== "ACTIVE",
   });
@@ -114,6 +119,9 @@ export function getSensorDisplay(
       tone: open ? "red" : "emerald",
       icon,
       description: open ? "Acceso fisico abierto." : "Acceso fisico cerrado.",
+      recommendation: open
+        ? "Confirma si la puerta debe permanecer abierta en cocina."
+        : "Entrada controlada correctamente.",
       isBoolean: true,
       isCritical: open,
     });
@@ -129,6 +137,9 @@ export function getSensorDisplay(
       tone: detected ? "amber" : "emerald",
       icon,
       description: detected ? "Movimiento detectado en el area." : "Area estable.",
+      recommendation: detected
+        ? "Revisa actividad reciente si no hay personal autorizado."
+        : "Sin movimiento relevante detectado.",
       isBoolean: true,
       isCritical: detected,
     });
@@ -144,6 +155,9 @@ export function getSensorDisplay(
       tone: active ? "red" : "emerald",
       icon,
       description: active ? "Boton de emergencia activado." : "Sin emergencia activa.",
+      recommendation: active
+        ? "Atiende el punto de emergencia inmediatamente."
+        : "Boton de emergencia en estado normal.",
       isBoolean: true,
       isCritical: active,
     });
@@ -158,6 +172,7 @@ export function getSensorDisplay(
       tone: "slate",
       icon,
       description: "Lectura textual recibida desde el dispositivo.",
+      recommendation: "Revisa el detalle tecnico si el texto no es esperado.",
       isBoolean: false,
       isCritical: false,
     });
@@ -178,6 +193,11 @@ export function getSensorDisplay(
         : warning
           ? "Nivel elevado."
           : "Nivel normal.",
+      recommendation: critical
+        ? "Ventila la cocina y revisa posible fuga de gas o humo."
+        : warning
+          ? "Mantente atento y verifica extractores."
+          : "Calidad de aire dentro de rango.",
       isBoolean: false,
       isCritical: critical,
     });
@@ -198,6 +218,11 @@ export function getSensorDisplay(
         : warning
           ? "Fuera del rango ideal."
           : "Rango normal.",
+      recommendation: critical
+        ? "Revisa fuentes de calor y ventilacion de la cocina."
+        : warning
+          ? "Monitorea equipos termicos y ambiente."
+          : "Temperatura operativa estable.",
       isBoolean: false,
       isCritical: critical,
     });
@@ -213,6 +238,9 @@ export function getSensorDisplay(
       tone: warning ? "amber" : "emerald",
       icon,
       description: warning ? "Humedad fuera de rango." : "Humedad normal.",
+      recommendation: warning
+        ? "Verifica ventilacion, condensacion o extraccion."
+        : "Humedad dentro de rango operativo.",
       isBoolean: false,
       isCritical: false,
     });
@@ -229,6 +257,7 @@ export function getSensorDisplay(
       tone: "sky",
       icon,
       description: sensor.unit ? lightLabel : "Nivel de iluminacion estimado.",
+      recommendation: "Ajusta iluminacion si afecta visibilidad de operacion.",
       isBoolean: false,
       isCritical: false,
     });
@@ -244,6 +273,9 @@ export function getSensorDisplay(
       tone: close ? "amber" : "emerald",
       icon,
       description: close ? "Objeto cercano detectado." : "Distancia normal.",
+      recommendation: close
+        ? "Verifica obstaculos o cierre fisico cercano."
+        : "Distancia sin riesgo operativo.",
       isBoolean: false,
       isCritical: false,
     });
@@ -257,6 +289,7 @@ export function getSensorDisplay(
     tone: "slate",
     icon,
     description: "Lectura numerica recibida.",
+    recommendation: "Interpreta la lectura segun el umbral operativo configurado.",
     isBoolean: false,
     isCritical: false,
   });

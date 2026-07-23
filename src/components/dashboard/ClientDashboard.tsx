@@ -22,13 +22,7 @@ import { useDevices } from "@/hooks/useDevices";
 import { useSensors } from "@/hooks/useSensors";
 import { createRealtimeClient } from "@/lib/realtime/stomp-client";
 import { buildActivityLog } from "@/lib/utils/activity-log";
-import {
-  getAccessStats,
-  getAlertStats,
-  getDeviceStats,
-  getSensorStats,
-  getSystemScore,
-} from "@/lib/utils/dashboard-stats";
+import { buildAdminStats } from "@/lib/utils/dashboard-stats";
 import { getAccessResultLabel } from "@/lib/utils/labels";
 import type { TimeRangeId } from "@/lib/utils/time-range";
 import { getRangeDescription, getTimeRangeWindow } from "@/lib/utils/time-range";
@@ -46,6 +40,7 @@ import { ClientQuickControls } from "./ClientQuickControls";
 import { ClientSecurityStatus } from "./ClientSecurityStatus";
 import { ClientSensorCards } from "./ClientSensorCards";
 import { DeviceStatsPanel } from "./DeviceStatsPanel";
+import { KitchenStatusPanel } from "./KitchenStatusPanel";
 import { RecentAlerts } from "./RecentAlerts";
 import type { ModuleHealth } from "./SystemHealthCard";
 import { SystemHealthCard } from "./SystemHealthCard";
@@ -79,40 +74,43 @@ export function ClientDashboard() {
   const alertsData = alerts.data ?? [];
   const accessEventsData = accessEvents.data ?? [];
   const actuatorsData = actuators.data ?? [];
-  const deviceStats = getDeviceStats(devicesData);
-  const sensorStats = getSensorStats(sensorsData);
-  const alertStats = getAlertStats(alertsData, range);
-  const accessStats = getAccessStats(accessEventsData, range);
-  const systemScore = getSystemScore({
-    activeDevices: deviceStats.active,
-    totalDevices: deviceStats.total,
-    activeSensors: sensorStats.active,
-    totalSensors: sensorStats.total,
-    criticalAlerts: alertStats.critical,
+  const dashboardStats = buildAdminStats({
+    devices: devicesData,
+    sensors: sensorsData,
+    alerts: alertsData,
+    accessEvents: accessEventsData,
+    actuators: actuatorsData,
+    users: [],
+    range,
   });
+  const deviceStats = dashboardStats.devices;
+  const sensorStats = dashboardStats.sensors;
+  const alertStats = dashboardStats.alerts;
+  const accessStats = dashboardStats.access;
+  const systemScore = dashboardStats.systemScore;
   const activityItems = buildActivityLog({
     alerts: alertStats.visible,
     accessEvents: accessStats.visible,
     sensors: sensorsData,
   });
   const securityState =
-    alertStats.critical > 0
+    dashboardStats.kitchen.tone === "critical"
       ? {
-          title: "Alerta critica",
-          description: "Hay alertas criticas abiertas. Revisa sensores y bitacora antes de operar actuadores.",
+          title: "Alerta critica en cocina",
+          description: "Existe una alerta critica activa o un riesgo sensible de gas, emergencia o seguridad.",
           tone: "border-red-300/30 bg-red-500/10 text-red-100",
           icon: ShieldAlert,
         }
-      : alertStats.open > 0
+      : dashboardStats.kitchen.tone === "warning"
         ? {
-            title: "Atencion requerida",
-            description: "Existen alertas abiertas. El sistema puede operar, pero requiere revision.",
+            title: "Revision recomendada",
+            description: "Hay sensores o alertas que conviene revisar antes de continuar la operacion.",
             tone: "border-amber-300/30 bg-amber-400/10 text-amber-100",
             icon: AlertTriangle,
           }
         : {
-            title: "Sistema seguro",
-            description: "No hay alertas abiertas en el rango seleccionado. Sensores y dispositivos se muestran abajo.",
+            title: "Cocina segura",
+            description: "Todo esta funcionando correctamente segun los datos disponibles del sistema.",
             tone: "border-emerald-300/30 bg-emerald-400/10 text-emerald-100",
             icon: ShieldCheck,
           };
@@ -210,8 +208,8 @@ export function ClientDashboard() {
   return (
     <>
       <PageHeader
-        title="Mi Dashboard"
-        description={`Consola operativa de seguridad. ${getRangeDescription(range)}.`}
+        title="Mi cocina"
+        description={`Vista simple de seguridad y operacion SmartGuard 360. ${getRangeDescription(range)}.`}
         actions={
           <Badge className="w-fit border-[rgb(var(--sg-primary-rgb)/0.35)] bg-[rgb(var(--sg-primary-rgb)/0.12)] text-[var(--sg-primary)]">
             CLIENTE
@@ -222,7 +220,7 @@ export function ClientDashboard() {
       <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <TimeRangeFilter value={range} onChange={setRange} />
         <p className="text-sm text-slate-500">
-          Vista sin administracion global, roles ni gestion de usuarios.
+          Vista enfocada en cocina, alertas importantes y control rapido.
         </p>
       </div>
 
@@ -238,6 +236,8 @@ export function ClientDashboard() {
           onRefresh={refreshDashboard}
         />
 
+        <KitchenStatusPanel kitchen={dashboardStats.kitchen} />
+
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Card>
             <CardContent>
@@ -248,7 +248,9 @@ export function ClientDashboard() {
                     Estado de alarma
                   </p>
                   <p className="mt-1 text-lg font-semibold text-slate-50">
-                    {alertStats.critical > 0 ? "Activa por alerta" : "Sin alarma critica"}
+                    {dashboardStats.kitchen.emergency || alertStats.critical > 0
+                      ? "Activa por alerta"
+                      : "Sin alarma critica"}
                   </p>
                 </div>
               </div>
@@ -260,10 +262,10 @@ export function ClientDashboard() {
                 <RadioReceiver className="h-5 w-5 text-sky-300" />
                 <div>
                   <p className="text-xs uppercase tracking-normal text-slate-500">
-                    Sensores activos
+                    Estado de puerta
                   </p>
                   <p className="mt-1 text-lg font-semibold text-slate-50">
-                    {sensorStats.active} de {sensorStats.total}
+                    {dashboardStats.kitchen.doorOpen ? "Abierta" : "Sin alerta"}
                   </p>
                 </div>
               </div>
@@ -275,10 +277,10 @@ export function ClientDashboard() {
                 <Bell className="h-5 w-5 text-amber-200" />
                 <div>
                   <p className="text-xs uppercase tracking-normal text-slate-500">
-                    Alertas abiertas
+                    Gas / humo
                   </p>
                   <p className="mt-1 text-lg font-semibold text-slate-50">
-                    {alertStats.open}
+                    {dashboardStats.kitchen.gasRisk ? "Riesgo" : "Normal"}
                   </p>
                 </div>
               </div>

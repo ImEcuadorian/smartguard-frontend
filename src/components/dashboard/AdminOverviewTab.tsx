@@ -18,6 +18,7 @@ import { MetricCard } from "./MetricCard";
 import { StatsOverview } from "./StatsOverview";
 import { SystemHealthCard } from "./SystemHealthCard";
 import type { AdminDashboardTabProps } from "./AdminDashboardTabs";
+import { KitchenStatusPanel } from "./KitchenStatusPanel";
 
 export function AdminOverviewTab({
   stats,
@@ -111,6 +112,8 @@ export function AdminOverviewTab({
           hasError={isAdmin ? states.users.isError : false}
         />
       </StatsOverview>
+
+      <KitchenStatusPanel kitchen={stats.kitchen} />
 
       <section className="grid gap-6 xl:grid-cols-4">
         <DonutStat

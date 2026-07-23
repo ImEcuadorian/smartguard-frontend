@@ -36,6 +36,7 @@ export function DonutStat({
               strokeWidth="10"
             />
             <circle
+              className="animate-donut-draw"
               cx="50"
               cy="50"
               r="42"

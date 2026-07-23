@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmartGuard",
-  description: "Panel de monitoreo IoT y seguridad inteligente.",
+  title: "SmartGuard 360",
+  description: "Monitoreo IoT para restaurantes y cocinas inteligentes.",
 };
 
 export default function RootLayout({

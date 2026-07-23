@@ -14,7 +14,13 @@ import type {
 } from "@/lib/api/types";
 
 const statusLabels: Record<
-  DeviceStatus | SensorStatus | ActuatorStatus | AlertStatus | UserStatus | ActuatorCommandStatus,
+  | DeviceStatus
+  | SensorStatus
+  | ActuatorStatus
+  | AlertStatus
+  | UserStatus
+  | ActuatorCommandStatus
+  | AccessResult,
   string
 > = {
   ACTIVE: "Activo",
@@ -27,6 +33,8 @@ const statusLabels: Record<
   PENDING: "Pendiente",
   SENT: "Enviado",
   FAILED: "Fallido",
+  GRANTED: "Permitido",
+  DENIED: "Rechazado",
 };
 
 const severityLabels: Record<AlertSeverity, string> = {

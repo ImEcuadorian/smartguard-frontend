@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Bell, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, DoorOpen, Flame, Move, Thermometer } from "lucide-react";
 import { useAcknowledgeAlert, useResolveAlert } from "@/hooks/useAlerts";
 import { formatDate } from "@/lib/utils/format-date";
 import { Button } from "@/components/ui/Button";
@@ -77,6 +77,45 @@ export function AdminSecurityTab({
           tone="emerald"
           isLoading={states.alerts.isLoading}
           hasError={states.alerts.isError}
+        />
+      </StatsOverview>
+
+      <StatsOverview>
+        <MetricCard
+          title="Riesgo gas / humo"
+          value={stats.kitchen.gasRisk ? "Activo" : "Normal"}
+          description="Calculado desde alertas y sensores de gas"
+          icon={Flame}
+          tone={stats.kitchen.gasRisk ? "red" : "emerald"}
+          isLoading={states.alerts.isLoading || states.sensors.isLoading}
+          hasError={states.alerts.isError && states.sensors.isError}
+        />
+        <MetricCard
+          title="Temperatura"
+          value={stats.kitchen.temperatureRisk ? "Revision" : "Normal"}
+          description="Riesgo por umbrales o alertas de temperatura"
+          icon={Thermometer}
+          tone={stats.kitchen.temperatureRisk ? "amber" : "emerald"}
+          isLoading={states.alerts.isLoading || states.sensors.isLoading}
+          hasError={states.alerts.isError && states.sensors.isError}
+        />
+        <MetricCard
+          title="Puertas"
+          value={stats.kitchen.doorOpen ? "Abierta" : "Sin alerta"}
+          description="Eventos de puerta abierta en el rango"
+          icon={DoorOpen}
+          tone={stats.kitchen.doorOpen ? "amber" : "emerald"}
+          isLoading={states.alerts.isLoading || states.sensors.isLoading}
+          hasError={states.alerts.isError && states.sensors.isError}
+        />
+        <MetricCard
+          title="Movimiento"
+          value={stats.kitchen.motionDetected ? "Detectado" : "Normal"}
+          description="Movimiento reportado por sensores o alertas"
+          icon={Move}
+          tone={stats.kitchen.motionDetected ? "amber" : "emerald"}
+          isLoading={states.alerts.isLoading || states.sensors.isLoading}
+          hasError={states.alerts.isError && states.sensors.isError}
         />
       </StatsOverview>
 

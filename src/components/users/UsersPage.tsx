@@ -8,7 +8,7 @@ export function UsersPage() {
     <>
       <PageHeader
         title="Clientes / Usuarios"
-        description="Gestion administrativa de cuentas SmartGuard. VIEWER se presenta como cliente en el frontend."
+        description="Gestion administrativa de cuentas SmartGuard 360. VIEWER se presenta como cliente en el frontend."
       />
       <UserManagementPanel />
     </>

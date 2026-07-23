@@ -40,7 +40,7 @@ export function ClientSecurityStatus({
             </div>
             <div>
               <p className="text-sm font-semibold uppercase tracking-normal opacity-75">
-                Estado de mi seguridad
+                Estado de mi cocina
               </p>
               <h2 className="mt-1 text-3xl font-semibold">{title}</h2>
             </div>
@@ -56,7 +56,7 @@ export function ClientSecurityStatus({
         <div className="space-y-4 lg:min-w-80 lg:text-right">
           <div>
             <p className="text-6xl font-semibold">{systemScore}%</p>
-            <p className="mt-1 text-sm opacity-75">salud operativa</p>
+            <p className="mt-1 text-sm opacity-75">salud de cocina</p>
           </div>
           <AutoRefreshIndicator
             updatedAt={updatedAt}

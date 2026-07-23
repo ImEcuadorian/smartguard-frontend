@@ -24,6 +24,7 @@ import type {
 import { canManage } from "@/lib/auth/roles";
 import { createRealtimeClient } from "@/lib/realtime/stomp-client";
 import { formatDate } from "@/lib/utils/format-date";
+import { getSensorDisplay, getSensorTypeLabel } from "@/lib/utils/sensor-display";
 
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -84,6 +85,7 @@ export function SensorDetailPage({ sensorId }: { sensorId: string }) {
   // Como el backend devuelve las lecturas ordenadas DESC,
   // la posición 0 es siempre la lectura más reciente.
   const latestReading = readings.data?.[0] ?? null;
+  const display = sensor.data ? getSensorDisplay(sensor.data, latestReading) : null;
 
   useEffect(() => {
     if (!session?.accessToken) {
@@ -130,7 +132,7 @@ export function SensorDetailPage({ sensorId }: { sensorId: string }) {
       <>
         <PageHeader
             title={sensor.data.name}
-            description={`${sensor.data.type} - ${sensor.data.code}`}
+            description={`${getSensorTypeLabel(sensor.data.type)} - ${sensor.data.code}`}
             actions={
               <Link
                   href="/sensors"
@@ -181,18 +183,18 @@ export function SensorDetailPage({ sensorId }: { sensorId: string }) {
               {!readings.isLoading && latestReading ? (
                   <div className="grid gap-3 sm:grid-cols-3">
                     <ReadingMetric
-                        label="Numérico"
-                        value={latestReading.numericValue ?? "N/A"}
+                        label="Lectura"
+                        value={display?.displayValue ?? "N/A"}
                     />
 
                     <ReadingMetric
-                        label="Booleano"
-                        value={String(latestReading.booleanValue ?? "N/A")}
+                        label="Estado"
+                        value={display?.statusLabel ?? "N/A"}
                     />
 
                     <ReadingMetric
-                        label="Texto"
-                        value={latestReading.textValue ?? "N/A"}
+                        label="Recomendacion"
+                        value={display?.recommendation ?? "Sin recomendacion"}
                     />
                   </div>
               ) : null}

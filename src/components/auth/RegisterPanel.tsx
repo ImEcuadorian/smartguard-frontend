@@ -53,10 +53,10 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
       <div className="rounded-lg border border-sky-300/25 bg-sky-400/10 p-3 text-sm leading-6 text-sky-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]">
         <div className="flex items-center gap-2 font-semibold">
           <Info className="h-4 w-4" />
-          Registro cliente preparado
+          Registro cliente SmartGuard 360
         </div>
         <p className="mt-1 opacity-85">
-          No se usaran endpoints protegidos desde esta pantalla sin una sesion activa.
+          Esta solicitud es visual y no usa endpoints protegidos sin una sesion activa.
         </p>
       </div>
 

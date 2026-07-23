@@ -285,8 +285,8 @@ export function AdminDashboard({
   return (
     <>
       <PageHeader
-        title={isAdmin ? "Dashboard administrador" : "Dashboard operativo"}
-        description={`Consola global SmartGuard por dominios. ${getRangeDescription(range)}.`}
+        title={isAdmin ? "Dashboard 360 administrador" : "Dashboard operativo de cocina"}
+        description={`Consola SmartGuard 360 para restaurantes y cocinas. ${getRangeDescription(range)}.`}
         actions={
           <div className="flex flex-col gap-3 xl:items-end">
             <div className="flex flex-wrap justify-end gap-2">

@@ -515,6 +515,48 @@ textarea {
   }
 }
 
+@keyframes shimmer {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(110%);
+  }
+}
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes donut-draw {
+  from {
+    stroke-dashoffset: 280;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes status-ping-soft {
   0% {
     transform: scale(0.92);
@@ -540,12 +582,66 @@ textarea {
   }
 }
 
+@keyframes tab-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wave-drift {
+  from {
+    background-position:
+      0% 50%,
+      100% 50%;
+  }
+
+  to {
+    background-position:
+      100% 50%,
+      0% 50%;
+  }
+}
+
+@keyframes map-pin-pulse {
+  0% {
+    opacity: 0.72;
+    transform: scale(0.72);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
+  }
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 .animate-sg-fade-up {
   animation: sg-fade-up 420ms ease-out both;
 }
 
 .animate-fade-in-up {
   animation: fade-in-up 460ms ease-out both;
+}
+
+.animate-stagger-in {
+  animation: stagger-in 420ms ease-out both;
 }
 
 .animate-sg-glow {
@@ -568,6 +664,26 @@ textarea {
 
 .animate-tab-slide {
   animation: tab-slide 260ms ease-out both;
+}
+
+.animate-tab-fade {
+  animation: tab-fade 260ms ease-out both;
+}
+
+.animate-progress-grow {
+  animation: progress-grow 720ms ease-out both;
+}
+
+.animate-donut-draw {
+  animation: donut-draw 820ms ease-out both;
+}
+
+.animate-map-pin-pulse {
+  animation: map-pin-pulse 2.4s ease-out infinite;
+}
+
+.animate-card-float {
+  animation: card-float 4.8s ease-in-out infinite;
 }
 
 .sg-card-lift {
@@ -685,11 +801,17 @@ textarea {
   .sg-shimmer-loading::after,
   .sg-status-ping-soft::after,
   .animate-fade-in-up,
+  .animate-donut-draw,
+  .animate-card-float,
   .animate-glow-breathe,
+  .animate-map-pin-pulse,
   .animate-metric-count,
+  .animate-progress-grow,
   .animate-soft-pulse,
   .animate-sg-fade-up,
   .animate-sg-glow,
+  .animate-stagger-in,
+  .animate-tab-fade,
   .animate-tab-slide,
   .sg-chart-enter,
   .sg-glow-breathe,

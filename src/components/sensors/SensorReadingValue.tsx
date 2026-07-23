@@ -20,6 +20,7 @@ export function SensorReadingValue({ display }: { display: SensorDisplay }) {
         {display.statusLabel}
       </p>
       <p className="mt-1 text-xs leading-5 text-slate-500">{display.description}</p>
+      <p className="mt-2 text-xs leading-5 text-slate-400">{display.recommendation}</p>
     </div>
   );
 }

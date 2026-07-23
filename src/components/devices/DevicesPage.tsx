@@ -2,12 +2,15 @@
 
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { useActuators } from "@/hooks/useActuators";
+import { useAlerts } from "@/hooks/useAlerts";
 import { useAuth } from "@/hooks/useAuth";
 import {
   useCreateDevice,
   useDevices,
   useUpdateDeviceStatus,
 } from "@/hooks/useDevices";
+import { useSensors } from "@/hooks/useSensors";
 import type { DeviceStatus } from "@/lib/api/types";
 import { canManage } from "@/lib/auth/roles";
 import { getStatusLabel } from "@/lib/utils/labels";
@@ -18,6 +21,8 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { Modal } from "@/components/ui/Modal";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Select } from "@/components/ui/Select";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { DeviceStatsPanel } from "@/components/dashboard/DeviceStatsPanel";
 import { DeviceApiKeyModal } from "./DeviceApiKeyModal";
 import { DeviceForm, type DeviceFormValues } from "./DeviceForm";
 import { DeviceTable } from "./DeviceTable";
@@ -28,9 +33,13 @@ export function DevicesPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const devices = useDevices(status ? { status } : undefined);
+  const sensors = useSensors();
+  const actuators = useActuators();
+  const alerts = useAlerts();
   const createDevice = useCreateDevice();
   const updateStatus = useUpdateDeviceStatus();
   const canEdit = canManage(role);
+  const devicesData = devices.data ?? [];
 
   async function handleCreate(values: DeviceFormValues) {
     const registration = await createDevice.mutateAsync(values);
@@ -42,7 +51,7 @@ export function DevicesPage() {
     <>
       <PageHeader
         title="Dispositivos"
-        description="Registro y control de ESP32 conectados al sistema SmartGuard."
+        description="Inventario ESP32 de SmartGuard 360 con sensores, actuadores, alertas y salud por dispositivo."
         actions={
           canEdit ? (
             <Button type="button" onClick={() => setCreateOpen(true)}>
@@ -64,6 +73,20 @@ export function DevicesPage() {
 
       {!devices.isLoading && !devices.isError ? (
         <>
+          <section className="mb-5">
+            <SectionHeader
+              title="Resumen por dispositivo"
+              description="Relaciones reales por deviceId: sensores conectados, actuadores disponibles y alertas relacionadas."
+            />
+            <DeviceStatsPanel
+              devices={devicesData}
+              sensors={sensors.data ?? []}
+              actuators={actuators.data ?? []}
+              alerts={alerts.data ?? []}
+              limit={9}
+            />
+          </section>
+
           <Card className="mb-4">
             <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="w-full sm:max-w-xs">
@@ -82,7 +105,7 @@ export function DevicesPage() {
             </CardContent>
           </Card>
           <DeviceTable
-            devices={devices.data ?? []}
+            devices={devicesData}
             canEdit={canEdit}
             onStatusChange={(id, nextStatus) =>
               updateStatus.mutate({ id, status: nextStatus })
