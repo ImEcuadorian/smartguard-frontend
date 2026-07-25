@@ -1,13 +1,17 @@
 "use client";
 
 import { CheckCircle2, Eye, EyeOff, Info, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
+import { authApi } from "@/lib/api/smartguard-api";
+import { storeAuthSession } from "@/lib/auth/auth-storage";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) {
+  const router = useRouter();
   const [form, setForm] = useState({
     displayName: "",
     email: "",
@@ -26,11 +30,23 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
     setMessage(null);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError(null);
+    setMessage(null);
+
+    if (!form.displayName.trim()) {
+      setError("Ingresa tu nombre completo.");
+      return;
+    }
 
     if (!emailPattern.test(form.email.trim())) {
       setError("Ingresa un correo electronico valido.");
+      return;
+    }
+
+    if (form.password.length < 8) {
+      setError("La contrasena debe tener al menos 8 caracteres.");
       return;
     }
 
@@ -40,12 +56,30 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
     }
 
     setIsSubmitting(true);
-    window.setTimeout(() => {
-      setIsSubmitting(false);
-      setMessage(
-        "El registro publico aun no esta habilitado en el backend. Solicita una cuenta cliente al administrador.",
+    try {
+      const auth = await authApi.registerClient({
+        displayName: form.displayName.trim(),
+        email: form.email.trim(),
+        password: form.password,
+      });
+      storeAuthSession(auth);
+      setForm({
+        displayName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setMessage("Cuenta creada correctamente. Entrando a tu dashboard.");
+      router.replace("/");
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "No se pudo crear la cuenta. Intenta nuevamente.",
       );
-    }, 450);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -56,7 +90,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
           Registro cliente SmartGuard 360
         </div>
         <p className="mt-1 opacity-85">
-          Esta solicitud es visual y no usa endpoints protegidos sin una sesion activa.
+          Crea una cuenta de cliente para acceder a la vista de monitoreo.
         </p>
       </div>
 
@@ -92,6 +126,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
               id="register-password"
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
+              minLength={8}
               value={form.password}
               onChange={(event) => updateField("password", event.target.value)}
               className="h-11 bg-slate-950/70 px-4 pr-12 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
@@ -120,6 +155,7 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
               id="register-confirm"
               type={showConfirmPassword ? "text" : "password"}
               autoComplete="new-password"
+              minLength={8}
               value={form.confirmPassword}
               onChange={(event) => updateField("confirmPassword", event.target.value)}
               className="h-11 bg-slate-950/70 px-4 pr-12 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
@@ -159,14 +195,24 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
         </div>
       ) : null}
 
-      <Button
-        className="h-11 w-full shadow-[0_0_34px_rgb(var(--sg-primary-rgb)/0.22)]"
-        type="submit"
-        isLoading={isSubmitting}
-      >
-        <UserPlus className="h-4 w-4" />
-        Solicitar cuenta cliente
-      </Button>
+      {message ? (
+        <Button
+          className="h-11 w-full shadow-[0_0_34px_rgb(var(--sg-primary-rgb)/0.22)]"
+          type="button"
+          onClick={onBackToLogin}
+        >
+          Ir a iniciar sesion
+        </Button>
+      ) : (
+        <Button
+          className="h-11 w-full shadow-[0_0_34px_rgb(var(--sg-primary-rgb)/0.22)]"
+          type="submit"
+          isLoading={isSubmitting}
+        >
+          <UserPlus className="h-4 w-4" />
+          Crear cuenta cliente
+        </Button>
+      )}
       <button
         type="button"
         onClick={onBackToLogin}

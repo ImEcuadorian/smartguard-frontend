@@ -1,0 +1,7 @@
+services:
+  frontend:
+    image: hsaldarriaga/smartguard-frontend:${SMARTGUARD_VERSION:-0.2.2}
+    container_name: smartguard-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"

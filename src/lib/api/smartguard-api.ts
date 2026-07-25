@@ -20,6 +20,7 @@ import type {
   SensorResponse,
   SensorStatus,
   SensorType,
+  RfidCardResponse,
   UserAccountResponse,
   UserRole,
   UserStatus,
@@ -39,6 +40,15 @@ export const authApi = {
   login: (body: { username: string; password: string }) =>
     api
       .post<AuthResponse>("/api/v1/auth/login", body)
+      .then((response) => response.data),
+
+  registerClient: (body: {
+    displayName: string;
+    email: string;
+    password: string;
+  }) =>
+    api
+      .post<AuthResponse>("/api/v1/auth/register-client", body)
       .then((response) => response.data),
 
   refresh: (refreshToken: string) =>
@@ -215,6 +225,16 @@ export const alertApi = {
 };
 
 export const accessApi = {
+  cards: () =>
+    api
+      .get<RfidCardResponse[]>("/api/v1/access/cards")
+      .then((response) => response.data),
+
+  createCard: (body: { uid: string; ownerName: string }) =>
+    api
+      .post<RfidCardResponse>("/api/v1/access/cards", body)
+      .then((response) => response.data),
+
   readers: () =>
     api
       .get<AccessReaderResponse[]>("/api/v1/access/readers")
