@@ -11,6 +11,7 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AccessEventsTable } from "./AccessEventsTable";
 import { AccessReadersTable } from "./AccessReadersTable";
+import { RfidCardsPanel } from "./RfidCardsPanel";
 
 export function AccessPage() {
   const queryClient = useQueryClient();
@@ -42,6 +43,7 @@ export function AccessPage() {
         description="Lectores RFID/NFC y eventos de tarjetas autorizadas o rechazadas."
       />
       <section className="grid gap-6">
+        <RfidCardsPanel />
         <Card>
           <CardHeader>
             <CardTitle>Lectores</CardTitle>
@@ -53,7 +55,7 @@ export function AccessPage() {
               <ErrorState
                 tone="info"
                 title="Lectores RFID no disponibles"
-                description="El modulo RFID no esta disponible por permisos del backend. El resto del sistema funciona correctamente."
+                description="No se pudo consultar la lista de lectores RFID. Revisa la sesion y la conexion con el backend."
               />
             ) : (
               <AccessReadersTable readers={readers.data ?? []} />
@@ -71,7 +73,7 @@ export function AccessPage() {
               <ErrorState
                 tone="info"
                 title="Eventos RFID no disponibles"
-                description="El modulo RFID no esta disponible por permisos del backend. El resto del sistema funciona correctamente."
+                description="No se pudieron consultar los eventos RFID. Revisa la sesion y la conexion con el backend."
               />
             ) : (
               <AccessEventsTable events={events.data ?? []} />

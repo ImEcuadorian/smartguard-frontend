@@ -20,6 +20,7 @@ import type {
   SensorResponse,
   SensorStatus,
   SensorType,
+  RfidCardResponse,
   UserAccountResponse,
   UserRole,
   UserStatus,
@@ -215,6 +216,16 @@ export const alertApi = {
 };
 
 export const accessApi = {
+  cards: () =>
+    api
+      .get<RfidCardResponse[]>("/api/v1/access/cards")
+      .then((response) => response.data),
+
+  createCard: (body: { uid: string; ownerName: string }) =>
+    api
+      .post<RfidCardResponse>("/api/v1/access/cards", body)
+      .then((response) => response.data),
+
   readers: () =>
     api
       .get<AccessReaderResponse[]>("/api/v1/access/readers")
