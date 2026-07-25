@@ -1,14 +1,17 @@
 "use client";
 
 import { CheckCircle2, Eye, EyeOff, Info, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
 import { authApi } from "@/lib/api/smartguard-api";
+import { storeAuthSession } from "@/lib/auth/auth-storage";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) {
+  const router = useRouter();
   const [form, setForm] = useState({
     displayName: "",
     email: "",
@@ -32,6 +35,11 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
     setError(null);
     setMessage(null);
 
+    if (!form.displayName.trim()) {
+      setError("Ingresa tu nombre completo.");
+      return;
+    }
+
     if (!emailPattern.test(form.email.trim())) {
       setError("Ingresa un correo electronico valido.");
       return;
@@ -49,18 +57,20 @@ export function RegisterPanel({ onBackToLogin }: { onBackToLogin: () => void }) 
 
     setIsSubmitting(true);
     try {
-      await authApi.registerClient({
-        username: form.email.trim(),
-        password: form.password,
+      const auth = await authApi.registerClient({
         displayName: form.displayName.trim(),
+        email: form.email.trim(),
+        password: form.password,
       });
+      storeAuthSession(auth);
       setForm({
         displayName: "",
         email: "",
         password: "",
         confirmPassword: "",
       });
-      setMessage("Cuenta creada correctamente. Ya puedes iniciar sesion.");
+      setMessage("Cuenta creada correctamente. Entrando a tu dashboard.");
+      router.replace("/");
     } catch (requestError) {
       setError(
         requestError instanceof Error

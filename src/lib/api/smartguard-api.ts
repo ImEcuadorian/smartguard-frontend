@@ -43,12 +43,12 @@ export const authApi = {
       .then((response) => response.data),
 
   registerClient: (body: {
-    username: string;
-    password: string;
     displayName: string;
+    email: string;
+    password: string;
   }) =>
     api
-      .post<UserAccountResponse>("/api/v1/auth/register-client", body)
+      .post<AuthResponse>("/api/v1/auth/register-client", body)
       .then((response) => response.data),
 
   refresh: (refreshToken: string) =>
