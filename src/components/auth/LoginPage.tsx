@@ -169,7 +169,7 @@ export function LoginPage() {
                   <p className="mt-1 text-sm leading-6 text-slate-400">
                     {mode === "login"
                       ? "Ingresa a la consola de monitoreo de tu cocina."
-                      : "Solicitud visual preparada para cuentas de restaurante."}
+                      : "Registra una cuenta de cliente para monitorear tu restaurante."}
                   </p>
                 </div>
                 <div className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-100 shadow-[0_0_22px_rgb(52_211_153/0.12)]">

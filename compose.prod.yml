@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ghcr.io/imecuadorian/smartguard-frontend:${SMARTGUARD_VERSION:-0.1.0}
+    image: ghcr.io/imecuadorian/smartguard-frontend:${SMARTGUARD_VERSION:-0.2.0}
     container_name: smartguard-frontend
     restart: unless-stopped
     ports:

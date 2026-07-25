@@ -42,6 +42,15 @@ export const authApi = {
       .post<AuthResponse>("/api/v1/auth/login", body)
       .then((response) => response.data),
 
+  registerClient: (body: {
+    username: string;
+    password: string;
+    displayName: string;
+  }) =>
+    api
+      .post<UserAccountResponse>("/api/v1/auth/register-client", body)
+      .then((response) => response.data),
+
   refresh: (refreshToken: string) =>
     api
       .post<AuthResponse>("/api/v1/auth/refresh", { refreshToken })
